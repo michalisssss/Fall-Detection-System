@@ -36,7 +36,7 @@ class FallTimer:
 
 # Escalation 
 def trigger_escalation():
-    minutes = ESCALATION_DELAY_SEC // 60
+    minutes = ESCALATION_DELAY_SEC // 60 # // -> result is in int
     result = escalate_alert(previous_contact = "child", elapsed_minutes = minutes)
     print(f"Escalation result: {result}")
 
@@ -45,13 +45,13 @@ fall_timer = FallTimer(ESCALATION_DELAY_SEC, trigger_escalation)
 
 # Check if Needle actually called the alert tool
 def was_alert_sent(result):
-    if not isinstance(result, dict): return False
+    if (not isinstance(result, dict)): return False
 
     results = result.get("results", [])
-    if not results: return False
+    if (not results): return False
 
     first = results[0]
-    if not isinstance(first, dict): return False
+    if (not isinstance(first, dict)): return False
 
     return first.get("status") == "alerted"
 
@@ -146,47 +146,42 @@ def handle_telegram_query(text):
             send_telegram_message(help_text)
         return
 
-    text = text.strip()
-    text_lower = text.lower()
+    text = text.strip() # disregard whitespaces
+    text_lower = text.lower() # convert to lower text
 
-    # Check for question keywords
-    is_question = (text.endswith("?") or "summary" in text_lower or "happened" in text_lower)
+    # Send question to Needle - it will understand and call summarize_activity
+    try:
+        # Instruction for needle to route the question
+        prompt = (f"The caregiver asked: '{text}'. If this is a question about activity, call the summarize_activity tool with the correct amount and unit.")
+        
+        result = agent.run(prompt)
+        print(f"Needle reply: {result}")
 
-    if not is_question:
+        # Check if Needle produced a summary and send it back
+        alert_sent = was_alert_sent(result) # Just to ensure it didn't trigger an alert by accident
+        
+        if isinstance(result, dict):
+            results = result.get("results", [])
+            for r in results:
+                if isinstance(r, dict) and "summary" in r:
+                    send_telegram_message(r["summary"])
+                    return
+
+        # If no summary was found
         send_telegram_message(
-            "Please ask a question.\n"
-            "For example: 'What happened today?'\n\n"
+            "I can only answer questions about activity.\n\n"
             "Type /help for more options.")
-        return
 
-    # Handle specific question types
-    if "today" in text_lower:
-        result = summarize_activity(time_range="today")
-        send_telegram_message(result["summary"])
-        return
-
-    if "hour" in text_lower:
-        result = summarize_activity(time_range="last_hour")
-        send_telegram_message(result["summary"])
-        return
-
-    if "week" in text_lower:
-        result = summarize_activity(time_range="last_week")
-        send_telegram_message(result["summary"])
-        return
-
-    # Unknown question
-    send_telegram_message(
-        "I can only answer questions about activity.\n\n"
-        "Try: 'What happened today?' or 'Summary for last hour?'\n"
-        "Type /help for more options.")
+    except Exception as e:
+        print(f"[ERROR] Failed to handle Telegram query: {e}")
+        send_telegram_message("Sorry, I could not process your request.")
 
 
 def main():
     print("Starting fall detection agent...")
     print(f"Connecting to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
 
-    # Start Telegram polling in a background thread
+    # Start Telegram polling in a background daemon thread
     start_telegram_polling(handle_telegram_query)
 
     # Create and connect the MQTT client
@@ -200,7 +195,7 @@ def main():
 
     try:
         print("Waiting for events... (Ctrl+C to stop)")
-        client.loop_forever() # blocking - waits for MQTT messages
+        client.loop_forever() # blocking - waits for MQTT or telegram messages
     except KeyboardInterrupt:
         print("\nShutting down...")
     finally:

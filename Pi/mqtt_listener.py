@@ -31,7 +31,7 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
             payload = json.loads(msg.payload.decode())
 
             # JSON object (dictionary) is expected
-            if not isinstance(payload, dict):
+            if (not isinstance(payload, dict)):
                 print(f"Unexpected JSON type: {type(payload)}")
                 return
 
@@ -50,7 +50,7 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
                 else: print("[WARNING] Fall escalation received (no handler)")
 
             # Fall recovery (the person has stood up)
-            elif event == "state_change" and not payload.get("fall"):
+            elif event == "state_change" and (not payload.get("fall")):
                 if on_recovery_callback: on_recovery_callback(payload)
                 else: print("[INFO] Recovery received (no handler)")
 

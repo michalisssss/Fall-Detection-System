@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from config import (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY, LOG_FILE)
 
-# Send a message to a specific Telegram chat
+# Send fall alertion message to caregiver
 def send_telegram_message(message: str, chat_id: str = None) -> bool:
     # Default chat ID is the primary caregiver
     if chat_id is None: chat_id = TELEGRAM_CHAT_PRIMARY
@@ -47,7 +47,7 @@ def read_log_since(since: datetime) -> list:
         with open(LOG_FILE, "r", encoding="utf-8") as f:
             # Process the file line by line (one JSON object per line)
             for line in f:
-                line = line.strip()
+                line = line.strip() # disregards whitespaces
 
                 # Skip empty lines
                 if not line: continue
@@ -77,16 +77,16 @@ def get_since(time_range: str) -> datetime:
     now = datetime.now()
 
     # Subtract one hour from the current time
-    if time_range == "last_hour": return now - timedelta(hours=1)
+    if time_range == "last_hour": return (now - timedelta(hours=1))
 
     # Reset to midnight of the current day
     if time_range == "today": return now.replace(hour=0, minute=0, second=0, microsecond=0)
 
     # Subtract seven days from the current time
-    if time_range == "last_week": return now - timedelta(days=7)
+    if time_range == "last_week": return (now - timedelta(days=7))
 
     # Default case: treat unknown values as "last hour"
-    return now - timedelta(hours=1)
+    return (now - timedelta(hours=1))
 
 
 @needle.tool
@@ -151,29 +151,47 @@ def escalate_alert(previous_contact: str, elapsed_minutes: int):
 
 
 @needle.tool
-def summarize_activity(time_range: str):
-    """Generate a summary of activity in a time range.
+def summarize_activity(amount: int, unit: str):
+    """Generate a summary of activity for a specific time period.
 
     Use this when the caregiver asks what happened recently.
     Do NOT use this for real-time alerts or fall notifications (use alert_caregiver for those).
 
     Args:
-        time_range: Window to summarize.
-            Must be one of: "last_hour", "today", "last_week".
+        amount: The number of time units to look back (e.g., 1, 3, 7).
+        unit: The time unit. Must be one of: "hours", "days", "weeks".
     """
-    # Compute the cutoff time for the requested window
-    since = get_since(time_range)
+    # Calculate the cutoff time dynamically based on the input
+    now = datetime.now()
+    if unit == "hours":
+        since = now - timedelta(hours=amount)
+    elif unit == "days":
+        since = now - timedelta(days=amount)
+    elif unit == "weeks":
+        since = now - timedelta(weeks=amount)
+    else:
+        since = now - timedelta(hours=1) # Fallback
 
     # Load all log records after that cutoff
     records = read_log_since(since)
 
     # Count events by type
-    fall_count = sum(1 for r in records if r.get("event") == "fall")
-    presence_count = sum(1 for r in records if r.get("event") == "presence")
-    radar_failure_count = sum(1 for r in records if r.get("event") == "radar_failure")
+    fall_count = 0
+    presence_count = 0
+    radar_failure_count = 0
 
-    # Human-readable summary
-    summary = (f"Activity summary for {time_range}: \n{fall_count} falls, \n{presence_count} presence changes, \n{radar_failure_count} radar failures.")
+    for record in records:
+        event = record.get("event")
+        if event == "fall":
+            fall_count += 1
+        elif event == "presence":
+            presence_count += 1
+        elif event == "radar_failure":
+            radar_failure_count += 1
+
+   # Human-readable summary
+    time_label = f"last {amount} {unit}"
+    summary = (f"Activity summary for {time_label}: \n{fall_count} falls, \n{presence_count} presence changes, \n{radar_failure_count} radar failures.")
 
     print(f"[summary] {summary}")
     return {"summary": summary}

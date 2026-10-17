@@ -55,6 +55,35 @@ bool isMQTTConnected() {
     return mqttClient.connected();
 }
 
+// Publish a JSON document to the given topic with retry
+static bool publish(const char* topic, JsonDocument& doc, const char* label) {
+    // Serialize
+    char buffer[256];
+    size_t n = serializeJson(doc, buffer);
+
+    // Check for truncation
+    if (n >= sizeof(buffer)) {
+        Serial.print("WARNING: JSON truncated (");
+        Serial.print(label);
+        Serial.println(")");
+        return false;
+    }
+
+    // Try to publish up to 3 times
+    for (int attempt = 1; attempt <= 3; attempt++) {
+        if (mqttClient.publish(topic, buffer, n)) {
+            Serial.print("Published ");
+            Serial.println(label);
+            return true;
+        }
+        delay(100); // retry every 0.1 sec
+    }
+
+    Serial.print("WARNING: Failed to publish ");
+    Serial.println(label);
+    return false;
+}
+
 // Publish fall event (fall detected or recovery)
 void publishFallEvent(bool fall, bool human) {
     if (!mqttClient.connected()) return;
@@ -124,33 +153,4 @@ void publishPresence(bool human) {
     doc["timestamp"] = millis();
 
     publish(MQTT_TOPIC_EVENT, doc, "presence");
-}
-
-// Publish a JSON document to the given topic with retry
-static bool publish(const char* topic, JsonDocument& doc, const char* label) {
-    // Serialize
-    char buffer[256];
-    size_t n = serializeJson(doc, buffer);
-
-    // Check for truncation
-    if (n >= sizeof(buffer)) {
-        Serial.print("WARNING: JSON truncated (");
-        Serial.print(label);
-        Serial.println(")");
-        return false;
-    }
-
-    // Try to publish up to 3 times
-    for (int attempt = 1; attempt <= 3; attempt++) {
-        if (mqttClient.publish(topic, buffer, n)) {
-            Serial.print("Published ");
-            Serial.println(label);
-            return true;
-        }
-        delay(100); // retry every 0.1 sec
-    }
-
-    Serial.print("WARNING: Failed to publish ");
-    Serial.println(label);
-    return false;
 }
