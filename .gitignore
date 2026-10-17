@@ -1,4 +1,4 @@
-# PlatformIO (ESP32 build files)
+# PlatformIO - ESP32 build files
 .pio/
 .pioenvs/
 .piolibdeps/
@@ -11,7 +11,7 @@
 *.a
 pio-debug.log
 
-# Python (Raspberry Pi)
+# Python (Pi)
 __pycache__/
 *.py[cod]
 venv/
@@ -21,7 +21,7 @@ ENV/
 *.egg-info/
 .pytest_cache/
 
-# Credentials - DO NOT UPLOAD
+# Credentials
 *.secret
 secrets.h
 config_local.h

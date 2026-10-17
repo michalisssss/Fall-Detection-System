@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from config import (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY, LOG_FILE)
 
-# Send fall alertion message to caregiver
+# Send fall alert to caregiver
 def send_telegram_message(message: str, chat_id: str = None) -> bool:
     # Default chat ID is the primary caregiver
     if chat_id is None: chat_id = TELEGRAM_CHAT_PRIMARY
@@ -31,7 +31,7 @@ def send_telegram_message(message: str, chat_id: str = None) -> bool:
         print(f"[telegram] Error for {chat_id}: {e}")
         return False
     
-# Append a record to the JSONL log file
+# Append record of events to the JSONL log file
 def append_log(record: dict):
     try:
         with open(LOG_FILE, "a", encoding="utf-8") as f:
@@ -70,24 +70,6 @@ def read_log_since(since: datetime) -> list:
         print(f"[log] No log file found at {LOG_FILE}")
 
     return records
-
-
-# Convert a time_range string ("last_hour", "today", "last_week") into a datetime cutoff object
-def get_since(time_range: str) -> datetime:
-    now = datetime.now()
-
-    # Subtract one hour from the current time
-    if time_range == "last_hour": return (now - timedelta(hours=1))
-
-    # Reset to midnight of the current day
-    if time_range == "today": return now.replace(hour=0, minute=0, second=0, microsecond=0)
-
-    # Subtract seven days from the current time
-    if time_range == "last_week": return (now - timedelta(days=7))
-
-    # Default case: treat unknown values as "last hour"
-    return (now - timedelta(hours=1))
-
 
 @needle.tool
 def alert_caregiver(room: str):

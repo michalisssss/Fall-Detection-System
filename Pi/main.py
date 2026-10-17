@@ -57,13 +57,13 @@ def was_alert_sent(result):
 
 # Handle ESP32's fall event
 def handle_fall_event(event):
-    # Gather event data
+    # event data
     room = event.get("room")
     human = event.get("human", True)
     timestamp = event.get("timestamp", "unknown")
 
     # If the room the event took place is unknown - alert anyway
-    if not room or room == "unknown":
+    if (not room) or (room == "unknown"):
         print("[WARNING] Fall event without a valid room. Alerting regardless.")
         alert_caregiver(room="unknown")
         return
@@ -83,7 +83,7 @@ def handle_fall_event(event):
         print(f"Needle decision: {result}")
 
         # if Needle did not alert - send a fallback alert
-        if not was_alert_sent(result):
+        if (not was_alert_sent(result)):
             print("[WARNING] Needle did not alert. Sending fallback alert.")
             alert_caregiver(room = room)
     # If Needle crashes - still send an alert
@@ -93,6 +93,7 @@ def handle_fall_event(event):
 
 # Handles escalation reported by the ESP32
 def handle_escalation_event(event):
+    # Room of event and reason of escalation
     room = event.get("room", "unknown")
     reason = event.get("reason", "unknown")
     print(f"[ESCALATION] Room={room}, reason={reason}")
@@ -108,7 +109,7 @@ def handle_recovery_event(event):
     room = event.get("room", "unknown")
     print(f"\nRecovery detected in {room}")
 
-    # Cancel the escalation timer
+    # Cancel escalation timer
     fall_timer.cancel()
 
     # Log the recovery
@@ -116,20 +117,27 @@ def handle_recovery_event(event):
 
 # Logs room pressence
 def handle_presence_event(event):
+    # Room and whether people are present
     present = event.get("human", False)
     room = event.get("room", "unknown")
-    status = "present" if present else "absent"
+    if present: 
+        status = "present" 
+    else: 
+        status = "absent"
     print(f"[PRESENCE] {room}: {status}")
-    log_event(room=room, event_type="presence")
+
+    # Log room pressence
+    log_event(room = room, event_type = "presence")
 
 # Logs radar failure
 def handle_radar_failure(event):
+    # Room where radar failed
     room = event.get("room", "unknown")
     print(f"[WARNING] Radar failure in {room}")
 
-    # Alert the caregiver that the system is not working
-    send_telegram_message(f"Radar failure in {room}. The system may not detect falls.")
-    log_event(room=room, event_type="radar_failure")
+    # Alert caregiver of radar failure
+    send_telegram_message(f"Radar failure in {room}.")
+    log_event(room = room, event_type = "radar_failure")
 
 # Telegram bot handling
 def handle_telegram_query(text):
@@ -157,17 +165,20 @@ def handle_telegram_query(text):
         result = agent.run(prompt)
         print(f"Needle reply: {result}")
 
-        # Check if Needle produced a summary and send it back
-        alert_sent = was_alert_sent(result) # Just to ensure it didn't trigger an alert by accident
+        # Check if Needle returned a valid dictionary
+        if (not isinstance(result, dict)):
+            send_telegram_message("I'm having trouble understanding. Please try again.")
+            return
         
-        if isinstance(result, dict):
-            results = result.get("results", [])
-            for r in results:
-                if isinstance(r, dict) and "summary" in r:
-                    send_telegram_message(r["summary"])
-                    return
+        # Search for the summary in the results
+        results = result.get("results", [])
 
-        # If no summary was found
+        for r in results:
+            if isinstance(r, dict) and "summary" in r:
+                send_telegram_message(r["summary"])
+                return # Exit the function after sending the summary
+
+        # No summary was found
         send_telegram_message(
             "I can only answer questions about activity.\n\n"
             "Type /help for more options.")
