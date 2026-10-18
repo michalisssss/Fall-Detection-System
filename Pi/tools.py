@@ -47,7 +47,7 @@ def read_log_since(since: datetime) -> list:
         with open(LOG_FILE, "r", encoding="utf-8") as f:
             # Process the file line by line (one JSON object per line)
             for line in f:
-                line = line.strip() # disregards whitespaces
+                line = line.strip() # disregard whitespaces
 
                 # Skip empty lines
                 if not line: continue
@@ -146,13 +146,13 @@ def summarize_activity(amount: int, unit: str):
     # Calculate the cutoff time dynamically based on the input
     now = datetime.now()
     if unit == "hours":
-        since = now - timedelta(hours=amount)
+        since = now - timedelta(hours = amount)
     elif unit == "days":
-        since = now - timedelta(days=amount)
+        since = now - timedelta(days = amount)
     elif unit == "weeks":
-        since = now - timedelta(weeks=amount)
-    else:
-        since = now - timedelta(hours=1) # Fallback
+        since = now - timedelta(weeks = amount)
+    else: # Fallback
+        since = now - timedelta(hours = 1) 
 
     # Load all log records after that cutoff
     records = read_log_since(since)

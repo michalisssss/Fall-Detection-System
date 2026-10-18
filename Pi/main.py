@@ -192,7 +192,7 @@ def main():
     print("Starting fall detection agent...")
     print(f"Connecting to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
 
-    # Start Telegram polling in a background daemon thread
+    # Start Telegram polling in a background daemon thread for user messages
     start_telegram_polling(handle_telegram_query)
 
     # Create and connect the MQTT client

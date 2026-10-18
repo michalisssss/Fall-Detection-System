@@ -24,7 +24,7 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
         else:
             print(f"MQTT connection failed, rc={rc}")
 
-    # Called automatically when a message arrives on a subscribed topic
+    # Called automatically when a message arrives from ESP32
     def on_message(client, userdata, msg):
         try:
             # Decode the payload into a Python dictionary
@@ -75,25 +75,34 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
     return client
 
 
-# Start a background thread that polls Telegram for new messages
+# Start a background thread that polls Telegram for new messages from caregiver
 def start_telegram_polling(on_query_callback):
+    # loops forever asking telegram for new messages
     def poll_loop():
-        offset = None # offset is used to acknowledge processed updates
+        # offset tracks the next message ID to avoid fetching the same messages twice
+        offset = None 
+        # endpoint of messages
         url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/getUpdates"
 
         # Run forever (daemon thread - it stops with the program)
         while True:
             try:
-                # Long polling: wait up to 30s for new messages
-                params = {"timeout": 30}
+                # New dictionary for each request
+                params = {} 
+
+                # Long polling - wait up to 30s for new messages
+                params["timeout"] = 30
+
+                # If there is an offset - let telegram send only new messages
                 if offset is not None: params["offset"] = offset
                 response = requests.get(url, params = params, timeout = 35)
 
-                # If Telegram returned an error, wait a bit and retry
+                # If there's an error - retry after 5 seconds
                 if response.status_code != 200:
                     time.sleep(5)
                     continue
 
+                # Convert JSON response to dictionary
                 data = response.json()
 
                 # Process each incoming update
@@ -101,12 +110,14 @@ def start_telegram_polling(on_query_callback):
                     # Advance the offset so this update is not processed again
                     offset = update["update_id"] + 1
 
+                    # extract message data
                     message = update.get("message", {})
                     text = message.get("text")
 
                     # Only handle text messages
                     if text:
                         print(f"[telegram] Incoming: {text}")
+                         # Pass text to the main program (handle_telegram_query)
                         on_query_callback(text)
 
             except Exception as e:
