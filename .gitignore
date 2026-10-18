@@ -1,7 +1,5 @@
-# PlatformIO - ESP32 build files
+# ESP32
 .pio/
-.pioenvs/
-.piolibdeps/
 .pio/build/
 *.elf
 *.bin
@@ -9,30 +7,21 @@
 *.map
 *.o
 *.a
-pio-debug.log
 
-# Python (Pi)
-__pycache__/
-*.py[cod]
+# Python venv
 venv/
 .venv/
-env/
-ENV/
-*.egg-info/
-.pytest_cache/
+__pycache__/
+*.pyc
 
 # Credentials
-*.secret
+.env
 secrets.h
 config_local.h
-.env
 
-# Logs and data
+# Logs
 events.jsonl
 *.log
 
-# IDE and OS
+# VS Code
 .vscode/
-.idea/
-.DS_Store
-Thumbs.db
