@@ -16,13 +16,16 @@ class FallTimer:
         self._timer = None          # holds threading.Timer object
         self._lock = threading.Lock() # prevents race conditions between threads (mutex)
 
-    def start(self): # Cancel any existing timer, then start a new one
-        with self._lock:
+    def start(self): # Cancel any existing timer and start a new one
+        self._lock.acquire()   # mutex lock
+        try:
             self.cancel()
             self._timer = threading.Timer(self.delay_sec, self._fire)
             self._timer.daemon = True  # daemon threads are killed with main program
             self._timer.start()
             print(f"[timer] Escalation timer started ({self.delay_sec}s)")
+        finally:
+            self._lock.release() # mutex unlock
 
     def cancel(self): # Stop the timer if it is running
         if self._timer is not None:
@@ -43,17 +46,24 @@ def trigger_escalation():
 # Single instance of timer used by all handlers
 fall_timer = FallTimer(ESCALATION_DELAY_SEC, trigger_escalation)
 
-# Check if Needle actually called the alert tool
+# Check if Needle called the alert tool
 def was_alert_sent(result):
-    if (not isinstance(result, dict)): return False
+    # Check if the result is a dictionary
+    if not isinstance(result, dict): return False
 
+    # Get list of results from Needle
     results = result.get("results", [])
-    if (not results): return False
+    if not results: return False
+    
+    # Check if the first result is a dictionary
+    if not isinstance(results[0], dict): return False
 
-    first = results[0]
-    if (not isinstance(first, dict)): return False
-
-    return first.get("status") == "alerted"
+    # Check if the status is "alerted"
+    status = results[0].get("status")
+    if status == "alerted":
+        return True
+    else:
+        return False
 
 # Handle ESP32's fall event
 def handle_fall_event(event):
@@ -75,7 +85,11 @@ def handle_fall_event(event):
     fall_timer.start()
 
      # Natural language query for Needle
-    query = (f"A fall was detected in the {room}.\n {'A person is present' if human else 'No person detected'}. \nWhat actions should be taken?")
+    if human:
+        presence_text = "a person is detected"
+    else:
+        presence_text = "no person is detected"
+    query = (f"A fall was detected in the {room} and {presence_text}.\nWhat actions should be taken?")
 
     try:
         # Ask Needle to decide which tool to call
@@ -136,7 +150,7 @@ def handle_radar_failure(event):
     print(f"[WARNING] Radar failure in {room}")
 
     # Alert caregiver of radar failure
-    send_telegram_message(f"Radar failure in {room}.")
+    send_telegram_message(f"Radar failure in {room}. The system may not detect falls.")
     log_event(room = room, event_type = "radar_failure")
 
 # Telegram bot handling

@@ -34,40 +34,47 @@ def send_telegram_message(message: str, chat_id: str = None) -> bool:
 # Append record of events to the JSONL log file
 def append_log(record: dict):
     try:
-        with open(LOG_FILE, "a", encoding="utf-8") as f:
-            f.write(json.dumps(record) + "\n")  # JSONL = each record is a JSON object on its own line
+        f = open(LOG_FILE, "a", encoding="utf-8")
+        f.write(json.dumps(record) + "\n")  # JSONL = each record is a JSON object on its own line
     except Exception as e:
         print(f"[log] Failed to write to {LOG_FILE}: {e}")
+    finally:
+        if f is not None: 
+            f.close()
 
 # Read all log records with a timestamp >= the given cutoff and return them
 def read_log_since(since: datetime) -> list:
     records = []
     try:
         # Open the log file for reading
-        with open(LOG_FILE, "r", encoding="utf-8") as f:
-            # Process the file line by line (one JSON object per line)
-            for line in f:
-                line = line.strip() # disregard whitespaces
+        f = open(LOG_FILE, "r", encoding="utf-8")
+        # Process the file line by line (one JSON object per line)
+        for line in f:
+            line = line.strip() # disregard whitespaces
 
-                # Skip empty lines
-                if not line: continue
+            # Skip empty lines
+            if not line: continue
 
-                try:
-                    # Parse the JSON object
-                    record = json.loads(line)
+            try:
+                # Parse JSON object
+                record = json.loads(line)
 
-                    # Convert the timestamp string to a datetime object
-                    ts = datetime.strptime(record.get("time", ""), "%Y-%m-%d %H:%M:%S")
+                # Convert timestamp string to a datetime object
+                ts = datetime.strptime(record.get("time", ""), "%Y-%m-%d %H:%M:%S")
 
-                    # Keep only records newer than the cutoff
-                    if ts >= since: records.append(record)
+                # Keep only records newer than the cutoff
+                if ts >= since: records.append(record)
 
-                # Skip malformed lines instead of crashing
-                except (json.JSONDecodeError, ValueError): continue
+            # Skip malformed lines
+            except Exception: 
+                continue
 
     # The log file doesn't exist yet - return empty list
     except FileNotFoundError:   
         print(f"[log] No log file found at {LOG_FILE}")
+    finally:
+        if f is not None:
+            f.close()
 
     return records
 

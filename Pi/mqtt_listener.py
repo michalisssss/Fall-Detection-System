@@ -30,8 +30,8 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
             # Decode the payload into a Python dictionary
             payload = json.loads(msg.payload.decode())
 
-            # JSON object (dictionary) is expected
-            if (not isinstance(payload, dict)):
+            # Check if the JSON type is dictionary
+            if not isinstance(payload, dict):
                 print(f"Unexpected JSON type: {type(payload)}")
                 return
 
