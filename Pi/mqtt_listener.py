@@ -15,7 +15,7 @@ def create_mqtt_client(on_fall_callback,
                        on_heartbeat_callback = None,
                        on_status_callback = None):
     # Create the MQTT client with a unique ID
-    client = mqtt.Client(callback_api_version = mqtt.CallbackAPIVersion.VERSION1, client_id = "pi-fall-detection")
+    client = mqtt.Client(callback_api_version = mqtt.CallbackAPIVersion.VERSION2, client_id = "pi-fall-detection")
     # Automatic reconnection with exponential backoff
     client.reconnect_delay_set(min_delay = 1, max_delay = 30)
 

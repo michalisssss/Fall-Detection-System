@@ -147,8 +147,16 @@ def summarize_activity(amount: int, unit: str):
     Use this when the caregiver asks what happened recently.
     Do NOT use this for real-time alerts or fall notifications (use alert_caregiver for those).
 
+    Extract the number and the unit from the user's request.
+    Examples:
+      "last 1 hour"  -> amount=1, unit="hours"
+      "last 2 hours" -> amount=2, unit="hours"
+      "last 3 days"  -> amount=3, unit="days"
+      "last 1 week"  -> amount=1, unit="weeks"
+      "today"        -> amount=1, unit="days"
+
     Args:
-        amount: The number of time units to look back (e.g., 1, 3, 7).
+        amount: The number of time units to look back (e.g., 1, 2, 3, 7).
         unit: The time unit. Must be one of: "hours", "days", "weeks".
     """
     # Calculate the cutoff time dynamically based on the input

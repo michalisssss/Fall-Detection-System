@@ -3,6 +3,7 @@ import needle
 from tools import (alert_caregiver, escalate_alert, summarize_activity, log_event, send_telegram_message)
 from mqtt_listener import create_mqtt_client, start_telegram_polling, start_heartbeat_monitor
 from config import (MQTT_BROKER, MQTT_PORT, ESCALATION_DELAY_SEC, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY)
+from agents import agent, query_agent
 
 # Allowed chat IDs for user queries (caregivers)
 ALLOWED_CHAT_IDS = {int(TELEGRAM_CHAT_PRIMARY), int(TELEGRAM_CHAT_SECONDARY)}
@@ -97,7 +98,8 @@ def handle_fall_event(event):
         presence_text = "a person is detected"
     else:
         presence_text = "no person is detected"
-    query = (f"A fall was detected in the {room} and {presence_text}.\nWhat actions should be taken?")
+    
+    query = (f"A fall was detected in the {room} and {presence_text}. Alert the caregiver.")
 
     try:
         # Wait 5 seconds - needle may be in use right now
@@ -193,8 +195,12 @@ def handle_telegram_query(text, chat_id = None):
     # Send question to needle - it will understand and call summarize_activity
     try:
         # Instruction for needle to route the question
-        prompt = (f"The caregiver asked: '{text}'. If this is a question about activity, call the summarize_activity tool with the correct amount and unit.")
-
+        prompt = (f"The caregiver asked: '{text}'. "
+                f"If this is a question about activity, call summarize_activity. "
+                f"For 'today' use amount=1, unit='days'. "
+                f"For 'last hour' use amount=1, unit='hours'. "
+                f"For 'last week' use amount=1, unit='weeks'.")
+        
         needle_lock.acquire()
         try:
             result = query_agent.run(prompt)
@@ -210,11 +216,21 @@ def handle_telegram_query(text, chat_id = None):
         # Search for the summary in the results
         results = result.get("results", [])
 
+        # needle calls summary tool
         for r in results:
             if isinstance(r, dict) and "summary" in r:
                 send_telegram_message(r["summary"], chat_id = chat_id)
                 return # Exit the function after sending the summary
 
+        # Fallback in case needle supressed summary tool
+        if isinstance(result, dict) and result.get("suppressed_calls"):
+            for call in result["suppressed_calls"]:
+                if call["name"] == "summarize_activity":
+                    args = call["arguments"]
+                    summary = summarize_activity(args["amount"], args["unit"])
+                    send_telegram_message(summary["summary"], chat_id=chat_id)
+                    return
+        
         # No summary was found
         send_telegram_message(
             "I can only answer questions about activity.\n\n"
