@@ -4,10 +4,16 @@ import time
 import requests
 import paho.mqtt.client as mqtt
 from datetime import datetime
-from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, TELEGRAM_BOT_TOKEN)
+from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, TELEGRAM_BOT_TOKEN, MQTT_TOPIC_HEARTBEAT, MQTT_TOPIC_STATUS, HEARTBEAT_TIMEOUT_SEC)
 
 # Create and configure the MQTT client
-def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_escalation_callback = None, on_recovery_callback = None, on_presence_callback = None):
+def create_mqtt_client(on_fall_callback, 
+                       on_radar_failure_callback = None,
+                       on_escalation_callback = None, 
+                       on_recovery_callback = None,
+                       on_presence_callback = None, 
+                       on_heartbeat_callback = None,
+                       on_status_callback = None):
     # Create the MQTT client with a unique ID
     client = mqtt.Client(callback_api_version = mqtt.CallbackAPIVersion.VERSION1, client_id = "pi-fall-detection")
     # Automatic reconnection with exponential backoff
@@ -17,10 +23,9 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
     def on_connect(client, userdata, flags, rc):
         if rc == 0:  # return code = 0 -> connection established
             print(f"Connected to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
-
             # Subscribe to all topics under home/fall-detection/
             client.subscribe(MQTT_TOPIC)
-            print(f"Subscribed to {MQTT_TOPIC}")
+            print(f"Subscribed to {MQTT_TOPIC} (events, heartbeat, status)")
         else:
             print(f"MQTT connection failed, rc={rc}")
 
@@ -41,26 +46,25 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
             print(f"Received on {msg.topic}: {payload}")
             event = payload.get("event")
 
-            # Fall detected and confirmed
-            if event == "fall" and payload.get("fall"): on_fall_callback(payload)
+            if msg.topic == MQTT_TOPIC_HEARTBEAT: # Heartbeat from ESP32
+                if on_heartbeat_callback: on_heartbeat_callback(payload)
+                return
+            if msg.topic == MQTT_TOPIC_STATUS: # Last Will status (offline - ESP32 disconnected unexpectedly)
+                if on_status_callback: on_status_callback(payload)
+                return
 
-            # Fall escalation (ESP32-side escalation)
-            elif event == "fall_escalated":
+            if event == "fall" and payload.get("fall"): # Fall detected and confirmed
+                on_fall_callback(payload)
+            elif event == "fall_escalated": # Fall escalation (ESP32-side escalation)
                 if on_escalation_callback: on_escalation_callback(payload)
                 else: print("[WARNING] Fall escalation received (no handler)")
-
-            # Fall recovery (the person has stood up)
-            elif event == "state_change" and (not payload.get("fall")):
+            elif event == "state_change" and (not payload.get("fall")): # Fall recovery (the person has stood up)
                 if on_recovery_callback: on_recovery_callback(payload)
                 else: print("[INFO] Recovery received (no handler)")
-
-            # Presence change (person entered or left the room)
-            elif event == "presence_changed":
+            elif event == "presence_changed": # Presence change (person entered or left the room)
                 if on_presence_callback: on_presence_callback(payload)
-                else: print("[INFO] Presence change received (no handler)")
-
-            # Radar failure
-            elif event == "radar_failure":
+                else: print("[INFO] Presence change received (no handler)") 
+            elif event == "radar_failure": # Radar failure
                 if on_radar_failure_callback: on_radar_failure_callback(payload)
                 else: print("[WARNING] Radar failure detected")
 
@@ -113,12 +117,13 @@ def start_telegram_polling(on_query_callback):
                     # extract message data
                     message = update.get("message", {})
                     text = message.get("text")
+                    chat_id = message.get("chat", {}).get("id")   # who sent it
 
                     # Only handle text messages
                     if text:
                         print(f"[telegram] Incoming: {text}")
                          # Pass text to the main program (handle_telegram_query)
-                        on_query_callback(text)
+                        on_query_callback(text, chat_id)
 
             except Exception as e:
                 print(f"[telegram] Polling error: {e}")
@@ -128,3 +133,32 @@ def start_telegram_polling(on_query_callback):
     thread = threading.Thread(target = poll_loop, daemon = True)
     thread.start()
     print("[telegram] Polling started")
+
+def start_heartbeat_monitor(on_timeout_callback, on_recovery_callback = None, timeout_sec = HEARTBEAT_TIMEOUT_SEC):
+    # lists
+    last_heartbeat = [time.time()]
+    node_down = [False]   # True = node dead
+
+    def on_heartbeat(payload):
+        # heartbeat arrived - refresh time stamp
+        last_heartbeat[0] = time.time()
+        
+        if node_down[0]: # heartbeat returned -> node is back
+            node_down[0] = False
+            if on_recovery_callback: on_recovery_callback()
+
+    def monitor_loop():
+        while True:
+            time.sleep(10) # Check every 10 seconds
+            # If node is not marked as down and there's no heartbeat within the timeout -> alert
+            if (not node_down[0]) and (time.time() - last_heartbeat[0] > timeout_sec):
+                node_down[0] = True # alert once per outage
+                print(f"[heartbeat] No heartbeat for {timeout_sec}s")
+                on_timeout_callback()
+
+    # daemon thread
+    threading.Thread(target = monitor_loop, daemon = True).start()
+    print(f"[heartbeat] Monitor started (timeout={timeout_sec}s)")
+
+     # Return the callback
+    return on_heartbeat

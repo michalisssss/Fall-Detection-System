@@ -7,10 +7,10 @@ void connectMQTT();
 void ensureMQTTConnected();
 void mqttLoop();
 bool isMQTTConnected();
-void publishFallEvent(bool fall, bool human);
-void publishFallEscalated();
+bool publishFallEvent(bool fall, bool human);
+bool publishFallEscalated();
+bool publishRadarFailure();
 void publishPresence(bool human);
 void publishHeartbeat();
-void publishRadarFailure();
 
 #endif

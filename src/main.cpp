@@ -12,7 +12,7 @@ static unsigned long lastPresenceUpdate = 0;
 
 void setup() {
     Serial.begin(115200);
-    while (!Serial);
+    while (!Serial && millis() < 3000);  // wait max 3s for Serial
 
     // Initialize hardware
     buzzerInit();

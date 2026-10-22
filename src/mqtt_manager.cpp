@@ -15,6 +15,8 @@ static unsigned long lastMQTTAttempt = 0;
 void connectMQTT() {
     unsigned long start = millis();
 
+    mqttClient.setServer(MQTT_BROKER, MQTT_PORT);
+
     while (!mqttClient.connected()) {
         // Give up after MQTT_CONNECT_TIMEOUT_MS
         if (millis() - start > MQTT_CONNECT_TIMEOUT_MS) {
@@ -23,8 +25,16 @@ void connectMQTT() {
         }
 
         Serial.print("Connecting to MQTT broker...");
-        if (mqttClient.connect(MQTT_CLIENT_ID)) {
+        if (mqttClient.connect(MQTT_CLIENT_ID, 
+                                    nullptr, // username
+                                    nullptr, // pass
+                                    MQTT_TOPIC_STATUS, // topic to be published at
+                                    1,  // QoS - it will be sent atleast 1 time
+                                    true, // retain - message will be kept for new subscribers
+                                    "{\"status\":\"offline\"}")) { // disconnection message {status : offline}
             Serial.println("connected");
+            // Publish online status
+            mqttClient.publish(MQTT_TOPIC_STATUS, "{\"status\":\"online\"}", true);
         } else {
             Serial.print("failed, rc=");
             Serial.print(mqttClient.state());
@@ -71,7 +81,7 @@ static bool publish(const char* topic, JsonDocument& doc, const char* label) {
 
     // Try to publish up to 3 times
     for (int attempt = 1; attempt <= 3; attempt++) {
-        if (mqttClient.publish(topic, buffer, n)) {
+        if (mqttClient.publish(topic, (const uint8_t*)buffer, n)) {
             Serial.print("Published ");
             Serial.println(label);
             return true;
@@ -85,8 +95,8 @@ static bool publish(const char* topic, JsonDocument& doc, const char* label) {
 }
 
 // Publish fall event (fall detected or recovery)
-void publishFallEvent(bool fall, bool human) {
-    if (!mqttClient.connected()) return;
+bool publishFallEvent(bool fall, bool human) {
+    if (!mqttClient.connected()) return false;
 
     JsonDocument doc;
     doc["event"] = fall ? "fall" : "state_change";
@@ -96,12 +106,12 @@ void publishFallEvent(bool fall, bool human) {
     doc["device_id"] = MQTT_CLIENT_ID;
     doc["timestamp"] = millis();  // Uptime in milliseconds
 
-    publish(MQTT_TOPIC_EVENT, doc, "fall event");
+    return publish(MQTT_TOPIC_EVENT, doc, "fall event");
 }
 
 // Publish a fall escalation event
-void publishFallEscalated() {
-    if (!mqttClient.connected()) return;
+bool publishFallEscalated() {
+    if (!mqttClient.connected()) return false;
 
     JsonDocument doc;
     doc["event"] = "fall_escalated";
@@ -110,12 +120,12 @@ void publishFallEscalated() {
     doc["device_id"] = MQTT_CLIENT_ID;
     doc["timestamp"] = millis();
 
-    publish(MQTT_TOPIC_EVENT, doc, "fall_escalated");
+    return publish(MQTT_TOPIC_EVENT, doc, "fall_escalated");
 }
 
 // Publish a radar failure event when the radar stops sending frames
-void publishRadarFailure() {
-    if (!mqttClient.connected()) return;
+bool publishRadarFailure() {
+    if (!mqttClient.connected()) return false;
 
     JsonDocument doc;
     doc["event"] = "radar_failure";
@@ -123,7 +133,7 @@ void publishRadarFailure() {
     doc["device_id"] = MQTT_CLIENT_ID;
     doc["timestamp"] = millis();
 
-    publish(MQTT_TOPIC_EVENT, doc, "radar_failure");
+    return publish(MQTT_TOPIC_EVENT, doc, "radar_failure");
 }
 
 // Publish a heartbeat message periodically to indicate the device is alive
@@ -144,6 +154,10 @@ void publishHeartbeat() {
 // Publish a presence update periodically to indicate whether a person is in the room
 void publishPresence(bool human) {
     if (!mqttClient.connected()) return;
+    static bool lastPresence = false;
+    static bool initialized = false;
+
+    if (initialized && human == lastPresence) return;  // no change -> skip 
 
     JsonDocument doc;
     doc["event"] = "presence_changed";
@@ -152,5 +166,9 @@ void publishPresence(bool human) {
     doc["device_id"] = MQTT_CLIENT_ID;
     doc["timestamp"] = millis();
 
-    publish(MQTT_TOPIC_EVENT, doc, "presence");
+    if (publish(MQTT_TOPIC_EVENT, doc, "presence")) {
+        lastPresence = human;
+        initialized = true;
+    }
+
 }

@@ -5,8 +5,6 @@
 // Internal state
 static unsigned long beepStartTime = 0;
 static unsigned long beepDuration = 0;
-static unsigned long lastButtonCheck = 0;
-static bool lastButtonState = HIGH;
 static bool beeping = false;
 
 // Initialize the buzzer pin and the stop button
@@ -25,7 +23,6 @@ void buzzerBeep(unsigned long duration_ms) {
     beepStartTime = millis();
     beepDuration = duration_ms;
     beeping = true;
-    lastButtonState = digitalRead(BUZZER_STOP_BTN);
 }
 
 // Turn the buzzer off

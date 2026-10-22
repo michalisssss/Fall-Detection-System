@@ -1,5 +1,4 @@
 import json
-import os
 import needle
 import requests
 from datetime import datetime, timedelta
@@ -33,6 +32,7 @@ def send_telegram_message(message: str, chat_id: str = None) -> bool:
     
 # Append record of events to the JSONL log file
 def append_log(record: dict):
+    f = None
     try:
         f = open(LOG_FILE, "a", encoding="utf-8")
         f.write(json.dumps(record) + "\n")  # JSONL = each record is a JSON object on its own line
@@ -44,6 +44,7 @@ def append_log(record: dict):
 
 # Read all log records with a timestamp >= the given cutoff and return them
 def read_log_since(since: datetime) -> list:
+    f = None
     records = []
     try:
         # Open the log file for reading
@@ -197,7 +198,7 @@ def log_event(room: str, event_type: str):
         room: The room where the event occurred (e.g., "living_room").
 
         event_type: Type of event.
-            Must be one of: "presence", "radar_failure", "system_boot", "recovery".
+            Must be one of: "presence", "radar_failure", "recovery".
     """
     # Get the current time
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

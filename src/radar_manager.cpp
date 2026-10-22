@@ -32,6 +32,8 @@ static unsigned long recoveryStartedAt = 0; // when recovery started
 static bool lastFallState = false;  // confirmed fall
 static bool radarWarningSent = false;  // radar-failure already sent
 static bool fallEscalated = false;  // escalation already sent
+static bool fallAlarmStarted = false;  // local alarm already started for this fall
+static bool lastHuman = false;  // last known human presence
 
 // Initialization
 void radarInit() {
@@ -58,7 +60,7 @@ void radarInit() {
     Serial.println("MR60FDA2 ready");
 
     // Give the radar a grace period before the watchdog can fire
-    lastRadarFrame = millis() - (RADAR_TIMEOUT_MS / 2);
+    lastRadarFrame = millis();
 }
 
 // Process the next radar frame and take action according to fall state
@@ -74,7 +76,8 @@ void radarUpdate() {
 
     bool human = mmWave.getHuman();
     bool fall  = mmWave.getFall();
-
+    lastHuman = human;  // remember last known presence
+    
     switch (state) {
         case STATE_IDLE: // no fall - nobody down
             if (fall) {
@@ -85,19 +88,28 @@ void radarUpdate() {
             break;
 
         case STATE_PENDING_FALL: // fall candidate - awaiting confirmation
-            if (!fall) { // Signal lost before fall confirmation - cancel
+            if (!fall && !fallAlarmStarted) { // Signal lost before fall confirmation - cancel
                 state = STATE_IDLE;
                 Serial.println("Fall candidate cancelled (signal lost)");
             } else if (millis() - fallDetectedAt >= FALL_CONFIRM_MS) {
-                // Fall confirmed -> publish, beep, and move to STATE_FALL
-                publishFallEvent(true, human);
-                lastFallState = true;
-                fallConfirmedAt = millis();
-                fallEscalated = false;
-                prefs.putBool("lastFall", true);
-                buzzerBeep(BUZZER_FALL_DURATION_MS);
-                state = STATE_FALL;
-                Serial.println("FALL CONFIRMED");
+                // Local alarm first - works even if WiFi/MQTT is down
+                if (!fallAlarmStarted) {
+                    fallAlarmStarted = true;
+                    fallConfirmedAt = millis();
+                    buzzerBeep(BUZZER_FALL_DURATION_MS);
+                    Serial.println("FALL CONFIRMED (local alarm)");
+                }
+                // Inform Pi - if it fails, retry on the next frame
+                if (publishFallEvent(true, human)) {
+                    lastFallState = true;
+                    fallEscalated = false;
+                    prefs.putBool("lastFall", true);
+                    fallAlarmStarted = false;
+                    state = STATE_FALL;
+                    Serial.println("Fall event delivered");
+                } else {
+                    Serial.println("WARNING: fall event not delivered (MQTT down?), will retry");
+                }
             }
             break;
 
@@ -107,10 +119,11 @@ void radarUpdate() {
                 recoveryStartedAt = millis();
                 Serial.println("Fall cleared, confirming recovery...");
             } else if (!fallEscalated && (millis() - fallConfirmedAt >= FALL_ESCALATE_MS)) {
-                // Fall persists without recovery -> escalate
-                fallEscalated = true;
-                Serial.println("FALL ESCALATED (no recovery)");
-                publishFallEscalated();
+                 // Mark as escalated only if the message was really sent
+                if (publishFallEscalated()) {
+                    fallEscalated = true;
+                    Serial.println("FALL ESCALATED (no recovery)");
+                }
             }
             break;
         
@@ -120,13 +133,14 @@ void radarUpdate() {
                 state = STATE_FALL;
                 Serial.println("Recovery cancelled (fall signal returned)");
             } else if (millis() - recoveryStartedAt >= FALL_CLEAR_MS) {
-                // Recovery confirmed
-                publishFallEvent(false, human);
-                lastFallState = false;
-                fallEscalated = false;
-                prefs.putBool("lastFall", false);
-                state = STATE_IDLE;
-                Serial.println("RECOVERY CONFIRMED");
+                // Recovery counts only after the Pi has been told
+                if (publishFallEvent(false, human)) {
+                    lastFallState = false;
+                    fallEscalated = false;
+                    prefs.putBool("lastFall", false);
+                    state = STATE_IDLE;
+                    Serial.println("RECOVERY CONFIRMED");
+                }
             }
             break;
     }
@@ -135,17 +149,19 @@ void radarUpdate() {
 // Radar watchdog
 void radarCheckTimeout() {
     if (!radarWarningSent && (millis() - lastRadarFrame > RADAR_TIMEOUT_MS)) {
-        Serial.println("WARNING: no radar frames received");
-        publishRadarFailure();
-        radarWarningSent = true;
+        // Retry every loop until the failure message is delivered
+        if (publishRadarFailure()) {
+            Serial.println("WARNING: no radar frames received");
+            radarWarningSent = true;
+        }
     }
 }
 
 // Radar getters
-bool radarIsFallConfirmed() {
-    return lastFallState;
+bool radarIsFallConfirmed() { // LED turns on at local confirmation - not only after delivery
+    return lastFallState || fallAlarmStarted;
 }
 
 bool radarIsHumanPresent() {
-    return mmWave.getHuman();
+    return lastHuman;
 }

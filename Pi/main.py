@@ -1,12 +1,20 @@
 import threading
 import needle
-from datetime import datetime
 from tools import (alert_caregiver, escalate_alert, summarize_activity, log_event, send_telegram_message)
-from mqtt_listener import create_mqtt_client, start_telegram_polling
-from config import (MQTT_BROKER, MQTT_PORT, CONFIDENCE_HIGH, CONFIDENCE_MEDIUM, ESCALATION_DELAY_SEC)
+from mqtt_listener import create_mqtt_client, start_telegram_polling, start_heartbeat_monitor
+from config import (MQTT_BROKER, MQTT_PORT, ESCALATION_DELAY_SEC, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY)
 
-# Create the Needle agent with all available tools
-agent = needle.Needle(tools=[alert_caregiver, escalate_alert, summarize_activity, log_event])
+# Allowed chat IDs for user queries (caregivers)
+ALLOWED_CHAT_IDS = {int(TELEGRAM_CHAT_PRIMARY), int(TELEGRAM_CHAT_SECONDARY)}
+
+# Agent for internal decisions
+agent = needle.Needle(tools = [alert_caregiver, escalate_alert, log_event])
+
+# Agent for user queries
+query_agent = needle.Needle(tools = [summarize_activity])
+
+# Needle mutex
+needle_lock = threading.Lock()
 
 # Class that tracks time since fall and escalates if no recovery
 class FallTimer:
@@ -92,8 +100,15 @@ def handle_fall_event(event):
     query = (f"A fall was detected in the {room} and {presence_text}.\nWhat actions should be taken?")
 
     try:
-        # Ask Needle to decide which tool to call
-        result = agent.run(query)
+        # Wait 5 seconds - needle may be in use right now
+        if not needle_lock.acquire(timeout = 5):
+            print("[WARNING] Needle busy. Sending fallback alert.")
+            alert_caregiver(room = room)
+            return
+        try:
+            result = agent.run(query)
+        finally:
+            needle_lock.release()
         print(f"Needle decision: {result}")
 
         # if Needle did not alert - send a fallback alert
@@ -154,7 +169,12 @@ def handle_radar_failure(event):
     log_event(room = room, event_type = "radar_failure")
 
 # Telegram bot handling
-def handle_telegram_query(text):
+def handle_telegram_query(text, chat_id = None):
+    # Ignore messages from unknown chats
+    if chat_id is None or int(chat_id) not in ALLOWED_CHAT_IDS:
+        print(f"[telegram] Ignored message from unauthorized chat {chat_id}")
+        return
+    
     # Handle bot commands (start with "/")
     if text.startswith("/"):
         if text == "/help":
@@ -164,24 +184,27 @@ def handle_telegram_query(text):
                 "- What happened today?\n"
                 "- Summary for last hour?\n"
                 "- Give me a summary for last week\n\n"
-                "Or just type a question in plain English.")
-            send_telegram_message(help_text)
+                "Or just type a question in English.")
+            send_telegram_message(help_text, chat_id = chat_id)
         return
 
     text = text.strip() # disregard whitespaces
-    text_lower = text.lower() # convert to lower text
 
-    # Send question to Needle - it will understand and call summarize_activity
+    # Send question to needle - it will understand and call summarize_activity
     try:
         # Instruction for needle to route the question
         prompt = (f"The caregiver asked: '{text}'. If this is a question about activity, call the summarize_activity tool with the correct amount and unit.")
-        
-        result = agent.run(prompt)
+
+        needle_lock.acquire()
+        try:
+            result = query_agent.run(prompt)
+        finally:
+            needle_lock.release()
         print(f"Needle reply: {result}")
 
         # Check if Needle returned a valid dictionary
         if (not isinstance(result, dict)):
-            send_telegram_message("I'm having trouble understanding. Please try again.")
+            send_telegram_message("I'm having trouble understanding. Please try again.", chat_id = chat_id)
             return
         
         # Search for the summary in the results
@@ -189,25 +212,39 @@ def handle_telegram_query(text):
 
         for r in results:
             if isinstance(r, dict) and "summary" in r:
-                send_telegram_message(r["summary"])
+                send_telegram_message(r["summary"], chat_id = chat_id)
                 return # Exit the function after sending the summary
 
         # No summary was found
         send_telegram_message(
             "I can only answer questions about activity.\n\n"
-            "Type /help for more options.")
+            "Type /help for more options.", chat_id = chat_id)
 
     except Exception as e:
         print(f"[ERROR] Failed to handle Telegram query: {e}")
-        send_telegram_message("Sorry, I could not process your request.")
+        send_telegram_message("Sorry, I could not process your request.", chat_id = chat_id)
 
 
 def main():
     print("Starting fall detection agent...")
     print(f"Connecting to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
 
+    # Heartbeat monitor
+    def on_heartbeat_timeout():
+        send_telegram_message("Heartbeat timeout.")
+
+    def on_node_recovered():
+        send_telegram_message("Connection restored.")
+
+    def on_status(payload):   # Last message from the broker
+        if payload.get("status") == "offline":
+            send_telegram_message("Disconnected from MQTT.")
+    
     # Start Telegram polling in a background daemon thread for user messages
     start_telegram_polling(handle_telegram_query)
+
+    # Start heartbeat monitor and get the callback to register
+    on_heartbeat_cb = start_heartbeat_monitor(on_heartbeat_timeout, on_node_recovered)
 
     # Create and connect the MQTT client
     client = create_mqtt_client(
@@ -215,7 +252,10 @@ def main():
         on_radar_failure_callback = handle_radar_failure,
         on_escalation_callback = handle_escalation_event,
         on_recovery_callback = handle_recovery_event,
-        on_presence_callback = handle_presence_event)
+        on_presence_callback = handle_presence_event,
+        on_heartbeat_callback = on_heartbeat_cb,
+        on_status_callback = on_status) 
+    
     client.connect(MQTT_BROKER, MQTT_PORT)
 
     try:

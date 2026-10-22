@@ -9,7 +9,6 @@
 #define BUZZER_PIN 16
 #define BUZZER_STOP_BTN 9              // XIAO ESP32-C6 BOOT button
 #define BUZZER_FALL_DURATION_MS 5000   // 5 seconds beep on fall
-#define BUZZER_STOP_DEBOUNCE_MS 50     // 50ms debounce time for the button
 
 // WiFi configuration
 #define WIFI_SSID "hotspots"          // hotspot/router SSID #####################################################################
@@ -23,6 +22,7 @@
 #define MQTT_CLIENT_ID "xiao-fall-detector"
 #define MQTT_TOPIC_EVENT "home/fall-detection/events"
 #define MQTT_TOPIC_HEARTBEAT "home/fall-detection/heartbeat"
+#define MQTT_TOPIC_STATUS  "home/fall-detection/status"
 #define MQTT_CONNECT_TIMEOUT_MS 10000 // 10 seconds max for MQTT connection
 #define MQTT_RETRY_INTERVAL_MS 60000  // Retry MQTT every 60 seconds
 

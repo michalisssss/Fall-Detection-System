@@ -5,13 +5,12 @@ MQTT_BROKER = "localhost"
 MQTT_PORT = 1883
 MQTT_TOPIC = "home/fall-detection/#"
 
-# Tiered alerting thresholds based on needle confidence
-CONFIDENCE_HIGH   = 0.9 # >= 0.9: normal alert
-CONFIDENCE_MEDIUM = 0.7 # >= 0.7: alert with warning
-                        # < 0.7: alert and log for review
+HEARTBEAT_TIMEOUT_SEC = 120  # 2 minutes without heartbeat = node down
+MQTT_TOPIC_HEARTBEAT = "home/fall-detection/heartbeat"
+MQTT_TOPIC_STATUS = "home/fall-detection/status"
 
 # Telegram bot configuration
-TELEGRAM_BOT_TOKEN = "8254400683:AAEvVhYp4R7X9Rytm1x53MuOZA7L16XJlGo"
+TELEGRAM_BOT_TOKEN = "" ###########################################################
 
 # Primary contact receives the first alert (child)
 TELEGRAM_CHAT_PRIMARY = "8728165971"
