@@ -164,10 +164,6 @@ void radarCheckTimeout() {
     }
 }
 
-void radarResetTimeout() { 
-    lastRadarFrame = millis(); 
-}
-
 // Radar getters
 bool radarIsFallConfirmed() { // LED turns on at local confirmation - not only after delivery
     return lastFallState || fallAlarmStarted;

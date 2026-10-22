@@ -8,7 +8,6 @@
 #include "buzzer_manager.h"
 
 static unsigned long lastHeartbeat = 0;
-static unsigned long lastPresenceUpdate = 0;
 
 void setup() {
     Serial.begin(115200);
@@ -25,8 +24,6 @@ void setup() {
 
     // Enable watchdog
     watchdogInit();
-
-    radarResetTimeout();
 
     Serial.println("System ready");
 }

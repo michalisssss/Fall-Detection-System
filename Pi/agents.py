@@ -23,4 +23,7 @@ def build_activity_prompt(text):
             f"If this is a question about activity, call summarize_activity. "
             f"For 'today' use amount=1, unit='days'. "
             f"For 'last hour' use amount=1, unit='hours'. "
-            f"For 'last week' use amount=1, unit='weeks'.")
+            f"For 'last week' use amount=1, unit='weeks'."
+            f"For 'last 2 hours' use amount=2, unit='hours'. "
+            f"For 'last 6 days' use amount=6, unit='days'. "
+            f"For 'last 3 weeks' use amount=3, unit='weeks'. ")

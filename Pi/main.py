@@ -269,7 +269,7 @@ def main():
         on_status_callback = on_status) 
     
     client.connect_async(MQTT_BROKER, MQTT_PORT)   # does not fail if the broker is down
-
+    print("Attempting to connect to MQTT (will retry if broker is down)...")
     try:
         print("Waiting for events... (Ctrl+C to stop)")
         # retry_first_connection: keep trying until the broker is available
