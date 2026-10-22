@@ -5,17 +5,17 @@
 static unsigned long lastBlinkTime = 0;
 static bool blinkState = false;
 
-// Initialize the LED pin as an output and set it to LOW
+// Initialize the LED pin as an output and set it to HIGH (OFF)
 void ledInit() {
     pinMode(LED_PIN, OUTPUT);
-    digitalWrite(LED_PIN, LOW);
+    digitalWrite(LED_PIN, HIGH);
     blinkState = false;
 }
 
 // Update the LED status based on human presence and fall detection
 void ledUpdate(bool human, bool fall) {
-    if (fall) { // Fall detected = ON
-        digitalWrite(LED_PIN, HIGH);
+    if (fall) { // Fall detected = ON (LOW)
+        digitalWrite(LED_PIN, LOW);
         lastBlinkTime = millis();
         return;
     }
@@ -25,12 +25,12 @@ void ledUpdate(bool human, bool fall) {
         if (now - lastBlinkTime >= LED_BLINK_INTERVAL_MS) {
             lastBlinkTime = now;
             blinkState = !blinkState;
-            digitalWrite(LED_PIN, blinkState ? HIGH : LOW);
+            digitalWrite(LED_PIN, blinkState ? LOW : HIGH);
         }
         return;
     }
 
-    // No presence = LED off
-    digitalWrite(LED_PIN, LOW);
+    // No presence = LED off (HIGH)
+    digitalWrite(LED_PIN, HIGH);
     blinkState = false;
 }
