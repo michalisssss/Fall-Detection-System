@@ -13,13 +13,13 @@ MQTT_TOPIC_STATUS = "home/fall-detection/status"
 TELEGRAM_BOT_TOKEN = "" ###########################################################
 
 # Primary contact receives the first alert (child)
-TELEGRAM_CHAT_PRIMARY = "8728165971"
+TELEGRAM_CHAT_PRIMARY = ""
 
 # Secondary contact receives escaletion alert (family group chat)
-TELEGRAM_CHAT_SECONDARY = "-5546381841"
+TELEGRAM_CHAT_SECONDARY = ""
 
-# Escalation delay
-ESCALATION_DELAY_SEC = 180 # 3 minutes
+# Escalation delay (15 seconds more than the ESP32 escalation timeout so there is no double escaltion)
+ESCALATION_DELAY_SEC = 195 # 3 minutes and 15 seconds
 
 # Event log file - logs are stored with the scripts
 LOG_FILE = os.path.join(os.path.dirname(__file__), "events.jsonl")

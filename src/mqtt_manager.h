@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-void connectMQTT();
+void connectMQTT(bool singleAttempt = false);
 void ensureMQTTConnected();
 void mqttLoop();
 bool isMQTTConnected();

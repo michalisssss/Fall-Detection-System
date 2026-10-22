@@ -20,7 +20,7 @@ def create_mqtt_client(on_fall_callback,
     client.reconnect_delay_set(min_delay = 1, max_delay = 30)
 
     # Called automatically when the client connects to the broker
-    def on_connect(client, userdata, flags, rc):
+    def on_connect(client, userdata, flags, rc, properties):
         if rc == 0:  # return code = 0 -> connection established
             print(f"Connected to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
             # Subscribe to all topics under home/fall-detection/

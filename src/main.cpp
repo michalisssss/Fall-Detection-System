@@ -26,6 +26,8 @@ void setup() {
     // Enable watchdog
     watchdogInit();
 
+    radarResetTimeout();
+
     Serial.println("System ready");
 }
 
@@ -58,10 +60,7 @@ void loop() {
     }
 
     // Periodic human presence update
-    if (millis() - lastPresenceUpdate > PRESENCE_INTERVAL) {
-        publishPresence(radarIsHumanPresent());
-        lastPresenceUpdate = millis();
-    }
+    publishPresence(radarIsHumanPresent());
 
     // Feed watchdog so it doesnt reset the system
     watchdogFeed();

@@ -4,10 +4,10 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import needle
 from tools import alert_caregiver, escalate_alert, summarize_activity, log_event
-from agents import query_agent
+from agents import agent, query_agent, build_fall_query, build_activity_prompt
 
 def make_agent():
-    return needle.Needle(tools=[alert_caregiver, escalate_alert, summarize_activity, log_event])
+    return needle.Needle(tools=[summarize_activity])
 
 def extract_called_tool(result):
     if not isinstance(result, dict):

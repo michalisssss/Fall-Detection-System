@@ -8,5 +8,6 @@ void radarUpdate();
 bool radarIsFallConfirmed();
 bool radarIsHumanPresent();
 void radarCheckTimeout();
+void radarResetTimeout();
 
 #endif

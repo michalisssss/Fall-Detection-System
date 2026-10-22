@@ -1,18 +1,11 @@
 import threading
-import needle
 from tools import (alert_caregiver, escalate_alert, summarize_activity, log_event, send_telegram_message)
 from mqtt_listener import create_mqtt_client, start_telegram_polling, start_heartbeat_monitor
 from config import (MQTT_BROKER, MQTT_PORT, ESCALATION_DELAY_SEC, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY)
-from agents import agent, query_agent
+from agents import agent, query_agent, build_fall_query, build_activity_prompt
 
 # Allowed chat IDs for user queries (caregivers)
 ALLOWED_CHAT_IDS = {int(TELEGRAM_CHAT_PRIMARY), int(TELEGRAM_CHAT_SECONDARY)}
-
-# Agent for internal decisions
-agent = needle.Needle(tools = [alert_caregiver, escalate_alert, log_event])
-
-# Agent for user queries
-query_agent = needle.Needle(tools = [summarize_activity])
 
 # Needle mutex
 needle_lock = threading.Lock()
@@ -81,6 +74,9 @@ def handle_fall_event(event):
     human = event.get("human", True)
     timestamp = event.get("timestamp", "unknown")
 
+    # Starting escalation timer
+    fall_timer.start()
+    
     # If the room the event took place is unknown - alert anyway
     if (not room) or (room == "unknown"):
         print("[WARNING] Fall event without a valid room. Alerting regardless.")
@@ -90,16 +86,8 @@ def handle_fall_event(event):
     print("\nProcessing fall event...\n")
     print(f"Room: {room},\nHuman present: {human},\nTimestamp: {timestamp}")
 
-    # Starting escalation timer
-    fall_timer.start()
-
-     # Natural language query for Needle
-    if human:
-        presence_text = "a person is detected"
-    else:
-        presence_text = "no person is detected"
-    
-    query = (f"A fall was detected in the {room} and {presence_text}. Alert the caregiver.")
+    # Natural language query for Needle
+    query = build_fall_query(room, human)
 
     try:
         # Wait 5 seconds - needle may be in use right now
@@ -143,14 +131,26 @@ def handle_recovery_event(event):
     # Cancel escalation timer
     fall_timer.cancel()
 
+    # Inform of recovery
+    send_telegram_message(f"The person in the {room} appears to have recovered.")
+
     # Log the recovery
     log_event(room = room, event_type = "recovery")
+
+# Last known presence per room
+last_presence = {}
 
 # Logs room pressence
 def handle_presence_event(event):
     # Room and whether people are present
     present = event.get("human", False)
     room = event.get("room", "unknown")
+
+    # Ignore events that don't change anything
+    if last_presence.get(room) == present:
+        return
+    last_presence[room] = present
+
     if present: 
         status = "present" 
     else: 
@@ -195,11 +195,7 @@ def handle_telegram_query(text, chat_id = None):
     # Send question to needle - it will understand and call summarize_activity
     try:
         # Instruction for needle to route the question
-        prompt = (f"The caregiver asked: '{text}'. "
-                f"If this is a question about activity, call summarize_activity. "
-                f"For 'today' use amount=1, unit='days'. "
-                f"For 'last hour' use amount=1, unit='hours'. "
-                f"For 'last week' use amount=1, unit='weeks'.")
+        prompt = build_activity_prompt(text)
         
         needle_lock.acquire()
         try:
@@ -247,14 +243,14 @@ def main():
 
     # Heartbeat monitor
     def on_heartbeat_timeout():
-        send_telegram_message("Heartbeat timeout.")
+        send_telegram_message("Warning: the fall detection node is not responding. Falls may not be detected.")
 
     def on_node_recovered():
-        send_telegram_message("Connection restored.")
+        send_telegram_message("The fall detection node is back online.")
 
-    def on_status(payload):   # Last message from the broker
+    def on_status(payload):   # Last Will message from the broker
         if payload.get("status") == "offline":
-            send_telegram_message("Disconnected from MQTT.")
+            send_telegram_message("Warning: the fall detection node disconnected unexpectedly.")
     
     # Start Telegram polling in a background daemon thread for user messages
     start_telegram_polling(handle_telegram_query)
@@ -272,11 +268,12 @@ def main():
         on_heartbeat_callback = on_heartbeat_cb,
         on_status_callback = on_status) 
     
-    client.connect(MQTT_BROKER, MQTT_PORT)
+    client.connect_async(MQTT_BROKER, MQTT_PORT)   # does not fail if the broker is down
 
     try:
         print("Waiting for events... (Ctrl+C to stop)")
-        client.loop_forever() # blocking - waits for MQTT or telegram messages
+        # retry_first_connection: keep trying until the broker is available
+        client.loop_forever(retry_first_connection = True) # blocking - waits for MQTT or telegram messages
     except KeyboardInterrupt:
         print("\nShutting down...")
     finally:

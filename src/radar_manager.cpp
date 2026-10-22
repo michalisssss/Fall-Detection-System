@@ -27,6 +27,7 @@ static unsigned long fallDetectedAt = 0;    // when the fall candidate started
 static unsigned long lastRadarFrame = 0;    // last valid frame timestamp
 static unsigned long fallConfirmedAt = 0;   // when the fall was confirmed
 static unsigned long recoveryStartedAt = 0; // when recovery started
+static unsigned long lastRepeatBeep = 0;
 
 // Flags
 static bool lastFallState = false;  // confirmed fall
@@ -96,8 +97,14 @@ void radarUpdate() {
                 if (!fallAlarmStarted) {
                     fallAlarmStarted = true;
                     fallConfirmedAt = millis();
+                    lastRepeatBeep = millis();
                     buzzerBeep(BUZZER_FALL_DURATION_MS);
                     Serial.println("FALL CONFIRMED (local alarm)");
+                } else {
+                    if (millis() - lastRepeatBeep > 30000) {
+                        lastRepeatBeep = millis();
+                        buzzerBeep(BUZZER_FALL_DURATION_MS);
+                    }
                 }
                 // Inform Pi - if it fails, retry on the next frame
                 if (publishFallEvent(true, human)) {
@@ -155,6 +162,10 @@ void radarCheckTimeout() {
             radarWarningSent = true;
         }
     }
+}
+
+void radarResetTimeout() { 
+    lastRadarFrame = millis(); 
 }
 
 // Radar getters

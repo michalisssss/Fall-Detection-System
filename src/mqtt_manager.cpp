@@ -12,10 +12,11 @@ static PubSubClient mqttClient(espClient);
 static unsigned long lastMQTTAttempt = 0;
 
 // Initialize MQTT connection to the broker - Blocks until connected OR timeout (MQTT_CONNECT_TIMEOUT_MS)
-void connectMQTT() {
+void connectMQTT(bool singleAttempt) {
     unsigned long start = millis();
 
     mqttClient.setServer(MQTT_BROKER, MQTT_PORT);
+    mqttClient.setSocketTimeout(3);   // give up after 3 seconds if the broker is unreachable
 
     while (!mqttClient.connected()) {
         // Give up after MQTT_CONNECT_TIMEOUT_MS
@@ -38,7 +39,7 @@ void connectMQTT() {
         } else {
             Serial.print("failed, rc=");
             Serial.print(mqttClient.state());
-            Serial.println(" - retrying in 2s");
+            if (singleAttempt) return;   // do not block the main loop
             delay(2000);
         }
     }
@@ -49,7 +50,7 @@ void ensureMQTTConnected() {
     if (!mqttClient.connected()) {
         if (millis() - lastMQTTAttempt > MQTT_RETRY_INTERVAL_MS) {
             Serial.println("MQTT lost, reconnecting...");
-            connectMQTT();
+            connectMQTT(true);
             lastMQTTAttempt = millis();
         }
     }
