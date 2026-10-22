@@ -24,7 +24,7 @@
 #define MQTT_TOPIC_HEARTBEAT "home/fall-detection/heartbeat"
 #define MQTT_TOPIC_STATUS  "home/fall-detection/status"
 #define MQTT_CONNECT_TIMEOUT_MS 10000 // 10 seconds max for MQTT connection
-#define MQTT_RETRY_INTERVAL_MS 60000  // Retry MQTT every 60 seconds
+#define MQTT_RETRY_INTERVAL_MS 15000  // Retry MQTT every 15 seconds
 
 // Room name included in event payloads
 #define ROOM_NAME "living_room"

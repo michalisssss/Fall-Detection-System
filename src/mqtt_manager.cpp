@@ -38,7 +38,7 @@ void connectMQTT(bool singleAttempt) {
             mqttClient.publish(MQTT_TOPIC_STATUS, "{\"status\":\"online\"}", true);
         } else {
             Serial.print("failed, rc=");
-            Serial.print(mqttClient.state());
+            Serial.println(mqttClient.state());
             if (singleAttempt) return;   // do not block the main loop
             delay(2000);
         }
