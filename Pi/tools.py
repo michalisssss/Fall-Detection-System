@@ -2,10 +2,10 @@ import json
 import needle
 import requests
 from datetime import datetime, timedelta
-from config import (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY, LOG_FILE)
+from config import (TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY, LOG_FILE, PRIMARY_CONTACT_NAME, SECONDARY_CONTACT_NAME)
 
-# Send fall alert to caregiver
-def send_telegram_message(message: str, chat_id: str = None) -> bool:
+# Send a message to a Telegram chat (primary caregiver by default)
+def send_telegram_message(message: str, chat_id: str = None):
     # Default chat ID is the primary caregiver
     if chat_id is None: chat_id = TELEGRAM_CHAT_PRIMARY
 
@@ -43,7 +43,7 @@ def append_log(record: dict):
             f.close()
 
 # Read all log records with a timestamp >= the given cutoff and return them
-def read_log_since(since: datetime) -> list:
+def read_log_since(since: datetime):
     f = None
     records = []
     try:
@@ -52,9 +52,7 @@ def read_log_since(since: datetime) -> list:
         # Process the file line by line (one JSON object per line)
         for line in f:
             line = line.strip() # disregard whitespaces
-
-            # Skip empty lines
-            if not line: continue
+            if not line: continue # Skip empty lines
 
             try:
                 # Parse JSON object
@@ -66,7 +64,7 @@ def read_log_since(since: datetime) -> list:
                 # Keep only records newer than the cutoff
                 if ts >= since: records.append(record)
 
-            # Skip malformed lines
+            # Ignore lines that don't parse as JSON
             except Exception: 
                 continue
 
@@ -118,16 +116,15 @@ def escalate_alert(previous_contact: str, elapsed_minutes: int):
     Do NOT use this for the initial alert.
 
     Args:
-        previous_contact: The person who was notified but did not respond.
-        Must be one of: "child", "family".
-
+        previous_contact: The person who was notified but did not respond. Must be one of: "child", "family".
         elapsed_minutes: Minutes passed since the first alert without a response.
     """
     # Current time
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Escalation message
-    message = (f"ESCALATION \n{previous_contact} did not respond in {elapsed_minutes} minutes.\nTime: {timestamp}")
+    message = (f"ESCALATION \n{previous_contact} did not respond in {elapsed_minutes} minutes.\n"
+               f"Escalating to {SECONDARY_CONTACT_NAME}.\nTime: {timestamp}")
 
     # Escalation always goes to the secondary contact (family group)
     send_telegram_message(message, chat_id = TELEGRAM_CHAT_SECONDARY)
@@ -149,39 +146,31 @@ def summarize_activity(amount: int, unit: str, anchor: str = "now"):
 
     Extract the number and the unit from the user's request.
     Examples:
-      "last 1 hour"  -> amount=1, unit="hours"
-      "last 2 hours" -> amount=2, unit="hours"
-      "last 3 days"  -> amount=3, unit="days"
-      "last 1 week"  -> amount=1, unit="weeks"
-      "last 1 month" -> amount=1, unit="months"
-      "today"        -> amount=1, unit="days"
+        "last hour"     -> amount=1, unit="hours"
+        "last N hours"  -> amount=N, unit="hours"
+        "last week"     -> amount=1, unit="weeks"
+        "last N weeks"  -> amount=N, unit="weeks"
+        "last month"    -> amount=1, unit="months"
+        "last N months" -> amount=N, unit="months"
+        "today"         -> amount=1, unit="days"
+        "yesterday"     -> amount=1, unit="days"
 
     Args:
         amount: The number of time units to look back (e.g., 1, 2, 3, 7).
         unit: The time unit. Must be one of: "hours", "days", "weeks", "months".
-        anchor: Optional. Use "today" for calendar today, "yesterday" for calendar yesterday.
-                Defaults to "now" (rolling window).
     """
     # Calculate the cutoff time dynamically based on the input
     now = datetime.now()
-
-    # Calendar-based anchors
-    if anchor == "today":
-        since = now.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
-    elif anchor == "yesterday":
-        yesterday = now - timedelta(days = 1)
-        since = yesterday.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
-    else:
-        if unit == "hours":
-            since = now - timedelta(hours = amount)
-        elif unit == "days":
-            since = now - timedelta(days = amount)
-        elif unit == "weeks":
-            since = now - timedelta(weeks = amount)
-        elif unit == "months":
-            since = now - timedelta(days = amount * 30)
-        else: # Fallback
-            since = now - timedelta(hours = 1) 
+    if unit == "hours":
+        since = now - timedelta(hours = amount)
+    elif unit == "days":
+        since = now - timedelta(days = amount)
+    elif unit == "weeks":
+        since = now - timedelta(weeks = amount)
+    elif unit == "months":
+        since = now - timedelta(days = amount * 30)
+    else: # Fallback
+        since = now - timedelta(hours = 1) 
 
     # Load all log records after that cutoff
     records = read_log_since(since)
@@ -200,17 +189,15 @@ def summarize_activity(amount: int, unit: str, anchor: str = "now"):
         elif event == "radar_failure":
             radar_failure_count += 1
 
-   # Human-readable summary
-    if anchor == "today":
-        time_label = "today"
-    elif anchor == "yesterday":
-        time_label = "yesterday"
+    # Human-readable summary
+    if amount == 1:
+        unit_label = unit[:-1] # removes the plural "s" (e.g., hours -> hour)
     else:
-        unit_label = unit[:-1] if amount == 1 else unit
-        time_label = f"last {amount} {unit}"
+        unit_label = unit
+    time_label = f"last {amount} {unit_label}"
     
     summary = (f"Activity summary for {time_label}: \n{fall_count} falls, \n{presence_count} presence changes, \n{radar_failure_count} radar failures.")
-    
+
     print(f"[summary] {summary}")
     return {"summary": summary}
 
@@ -224,9 +211,7 @@ def log_event(room: str, event_type: str):
 
     Args:
         room: The room where the event occurred (e.g., "living_room").
-
-        event_type: Type of event.
-            Must be one of: "presence", "radar_failure", "recovery".
+        event_type: Type of event. Must be one of: "presence", "radar_failure", "recovery".
     """
     # Get the current time
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

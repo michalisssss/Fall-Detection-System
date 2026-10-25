@@ -9,6 +9,10 @@ HEARTBEAT_TIMEOUT_SEC = 120  # 2 minutes without heartbeat = node down
 MQTT_TOPIC_HEARTBEAT = "home/fall-detection/heartbeat"
 MQTT_TOPIC_STATUS = "home/fall-detection/status"
 
+# Contact names
+PRIMARY_CONTACT_NAME = "child"
+SECONDARY_CONTACT_NAME = "family"
+
 # Telegram bot configuration
 TELEGRAM_BOT_TOKEN = "" ###########################################################
 
@@ -16,7 +20,7 @@ TELEGRAM_BOT_TOKEN = "" ########################################################
 TELEGRAM_CHAT_PRIMARY = ""
 
 # Secondary contact (group chat) receives escaletion alert
-TELEGRAM_CHAT_SECONDARY = ""
+TELEGRAM_CHAT_SECONDARY = "-"
 
 # Escalation delay (15 seconds more than the ESP32 escalation timeout so there is no double escaltion)
 ESCALATION_DELAY_SEC = 195 # 3 minutes and 15 seconds

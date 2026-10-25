@@ -7,13 +7,7 @@ from datetime import datetime
 from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, TELEGRAM_BOT_TOKEN, MQTT_TOPIC_HEARTBEAT, MQTT_TOPIC_STATUS, HEARTBEAT_TIMEOUT_SEC)
 
 # Create and configure the MQTT client
-def create_mqtt_client(on_fall_callback, 
-                       on_radar_failure_callback = None,
-                       on_escalation_callback = None, 
-                       on_recovery_callback = None,
-                       on_presence_callback = None, 
-                       on_heartbeat_callback = None,
-                       on_status_callback = None):
+def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_escalation_callback = None, on_recovery_callback = None,on_presence_callback = None, on_heartbeat_callback = None, on_status_callback = None):
     # Create the MQTT client with a unique ID
     client = mqtt.Client(callback_api_version = mqtt.CallbackAPIVersion.VERSION2, client_id = "pi-fall-detection")
     # Automatic reconnection with exponential backoff
@@ -21,7 +15,7 @@ def create_mqtt_client(on_fall_callback,
 
     # Called automatically when the client connects to the broker
     def on_connect(client, userdata, flags, rc, properties):
-        if rc == 0:  # return code = 0 -> connection established
+        if rc == 0:  # return code == 0 -> connection established
             print(f"Connected to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
             # Subscribe to all topics under home/fall-detection/
             client.subscribe(MQTT_TOPIC)
@@ -140,11 +134,12 @@ def start_heartbeat_monitor(on_timeout_callback, on_recovery_callback = None, ti
     node_down = [False]   # True = node dead
 
     def on_heartbeat(payload):
-        # heartbeat arrived - refresh time stamp
+        # heartbeat arrived - refresh timestamp
         last_heartbeat[0] = time.time()
-        
-        if node_down[0]: # heartbeat returned -> node is back
-            node_down[0] = False
+
+        # If the node was marked as down, it is now back online
+        if node_down[0]: # True = node dead
+            node_down[0] = False # False = node alive
             if on_recovery_callback: on_recovery_callback()
 
     def monitor_loop():
@@ -156,9 +151,9 @@ def start_heartbeat_monitor(on_timeout_callback, on_recovery_callback = None, ti
                 print(f"[heartbeat] No heartbeat for {timeout_sec}s")
                 on_timeout_callback()
 
-    # daemon thread
+    # Monitor runs in a daemon thread so it stops with the main program
     threading.Thread(target = monitor_loop, daemon = True).start()
     print(f"[heartbeat] Monitor started (timeout={timeout_sec}s)")
 
-     # Return the callback
+    # Return the callback so it can be registered with the MQTT client
     return on_heartbeat

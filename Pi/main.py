@@ -1,7 +1,7 @@
 import threading
 from tools import (alert_caregiver, escalate_alert, summarize_activity, log_event, send_telegram_message)
 from mqtt_listener import create_mqtt_client, start_telegram_polling, start_heartbeat_monitor
-from config import (MQTT_BROKER, MQTT_PORT, ESCALATION_DELAY_SEC, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY)
+from config import (MQTT_BROKER, MQTT_PORT, ESCALATION_DELAY_SEC, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY, PRIMARY_CONTACT_NAME, SECONDARY_CONTACT_NAME)
 from agents import agent, query_agent, build_fall_query, build_activity_prompt
 
 # Allowed chat IDs for user queries (caregivers)
@@ -42,7 +42,7 @@ class FallTimer:
 # Escalation 
 def trigger_escalation():
     minutes = ESCALATION_DELAY_SEC // 60 # // -> result is in int
-    result = escalate_alert(previous_contact = "child", elapsed_minutes = minutes)
+    result = escalate_alert(previous_contact = PRIMARY_CONTACT_NAME, elapsed_minutes = minutes)
     print(f"Escalation result: {result}")
 
 # Single instance of timer used by all handlers
@@ -56,7 +56,9 @@ def was_alert_sent(result):
     # Get list of results from Needle
     results = result.get("results", [])
     if not results: return False
-    
+
+    if not isinstance(results, list): return False
+
     # Check if the first result is a dictionary
     if not isinstance(results[0], dict): return False
 
@@ -121,7 +123,7 @@ def handle_escalation_event(event):
     fall_timer.cancel()
 
     minutes = ESCALATION_DELAY_SEC // 60
-    escalate_alert(previous_contact = "child", elapsed_minutes = minutes)
+    escalate_alert(previous_contact = PRIMARY_CONTACT_NAME, elapsed_minutes = minutes)
 
 # Cancels escalation timer if there's recovery
 def handle_recovery_event(event):
@@ -238,8 +240,7 @@ def handle_telegram_query(text, chat_id = None):
 
 
 def main():
-    print("Starting fall detection agent...")
-    print(f"Connecting to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
+    print(f"Starting fall detection agent... Connecting to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
 
     # Heartbeat monitor
     def on_heartbeat_timeout():
@@ -256,7 +257,7 @@ def main():
     start_telegram_polling(handle_telegram_query)
 
     # Start heartbeat monitor and get the callback to register
-    on_heartbeat_cb = start_heartbeat_monitor(on_heartbeat_timeout, on_node_recovered)
+    on_heartbeat_callback = start_heartbeat_monitor(on_heartbeat_timeout, on_node_recovered)
 
     # Create and connect the MQTT client
     client = create_mqtt_client(
@@ -265,15 +266,16 @@ def main():
         on_escalation_callback = handle_escalation_event,
         on_recovery_callback = handle_recovery_event,
         on_presence_callback = handle_presence_event,
-        on_heartbeat_callback = on_heartbeat_cb,
+        on_heartbeat_callback = on_heartbeat_callback,
         on_status_callback = on_status) 
     
     client.connect_async(MQTT_BROKER, MQTT_PORT)   # does not fail if the broker is down
     print("Attempting to connect to MQTT (will retry if broker is down)...")
     try:
         print("Waiting for events... (Ctrl+C to stop)")
-        # retry_first_connection: keep trying until the broker is available
-        client.loop_forever(retry_first_connection = True) # blocking - waits for MQTT or telegram messages
+
+        # blocking - waits for MQTT or telegram messages
+        client.loop_forever(retry_first_connection = True) # True -> keeps trying to connect until the broker is available
     except KeyboardInterrupt:
         print("\nShutting down...")
     finally:
