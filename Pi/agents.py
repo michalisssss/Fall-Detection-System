@@ -15,15 +15,24 @@ def build_fall_query(room, human):
     else:
         presence_text = "no person is detected"
         
-    return f"A fall was detected in the {room} and {presence_text}. Alert the caregiver."
+    return f"A fall was detected in the {room} and {presence_text}. Alert the caregiver. "
 
 
 def build_activity_prompt(text):
     return (f"The caregiver asked: '{text}'. "
             f"If this is a question about activity, call summarize_activity. "
-            f"For 'today' use amount=1, unit='days'. "
+            f"If no time period is mentioned, use amount=1, unit='days'. "
             f"For 'last hour' use amount=1, unit='hours'. "
-            f"For 'last week' use amount=1, unit='weeks'."
             f"For 'last 2 hours' use amount=2, unit='hours'. "
+            f"For 'last 4 hours' use amount=4, unit='hours'. "
+            f"For 'today' use anchor='today'. "
+            f"For 'yesterday' use anchor='yesterday'. "
+            f"For 'last 3 days' use amount=3, unit='days'. "
             f"For 'last 6 days' use amount=6, unit='days'. "
-            f"For 'last 3 weeks' use amount=3, unit='weeks'. ")
+            f"For 'this week' use amount=1, unit='weeks'. "
+            f"For 'last week' use amount=1, unit='weeks'. "
+            f"For 'last 2 weeks' use amount=2, unit='weeks'. "
+            f"For 'last 3 weeks' use amount=3, unit='weeks'. "
+            f"For 'last month' use amount=1, unit='months'. "
+            f"For 'last 2 months' use amount=2, unit='months'. "
+            f"For 'last 3 months' use amount=3, unit='months'. ")

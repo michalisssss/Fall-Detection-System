@@ -141,7 +141,7 @@ def escalate_alert(previous_contact: str, elapsed_minutes: int):
 
 
 @needle.tool
-def summarize_activity(amount: int, unit: str):
+def summarize_activity(amount: int, unit: str, anchor: str = "now"):
     """Generate a summary of activity for a specific time period.
 
     Use this when the caregiver asks what happened recently.
@@ -153,22 +153,35 @@ def summarize_activity(amount: int, unit: str):
       "last 2 hours" -> amount=2, unit="hours"
       "last 3 days"  -> amount=3, unit="days"
       "last 1 week"  -> amount=1, unit="weeks"
+      "last 1 month" -> amount=1, unit="months"
       "today"        -> amount=1, unit="days"
 
     Args:
         amount: The number of time units to look back (e.g., 1, 2, 3, 7).
-        unit: The time unit. Must be one of: "hours", "days", "weeks".
+        unit: The time unit. Must be one of: "hours", "days", "weeks", "months".
+        anchor: Optional. Use "today" for calendar today, "yesterday" for calendar yesterday.
+                Defaults to "now" (rolling window).
     """
     # Calculate the cutoff time dynamically based on the input
     now = datetime.now()
-    if unit == "hours":
-        since = now - timedelta(hours = amount)
-    elif unit == "days":
-        since = now - timedelta(days = amount)
-    elif unit == "weeks":
-        since = now - timedelta(weeks = amount)
-    else: # Fallback
-        since = now - timedelta(hours = 1) 
+
+    # Calendar-based anchors
+    if anchor == "today":
+        since = now.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    elif anchor == "yesterday":
+        yesterday = now - timedelta(days = 1)
+        since = yesterday.replace(hour = 0, minute = 0, second = 0, microsecond = 0)
+    else:
+        if unit == "hours":
+            since = now - timedelta(hours = amount)
+        elif unit == "days":
+            since = now - timedelta(days = amount)
+        elif unit == "weeks":
+            since = now - timedelta(weeks = amount)
+        elif unit == "months":
+            since = now - timedelta(days = amount * 30)
+        else: # Fallback
+            since = now - timedelta(hours = 1) 
 
     # Load all log records after that cutoff
     records = read_log_since(since)
@@ -188,9 +201,16 @@ def summarize_activity(amount: int, unit: str):
             radar_failure_count += 1
 
    # Human-readable summary
-    time_label = f"last {amount} {unit}"
+    if anchor == "today":
+        time_label = "today"
+    elif anchor == "yesterday":
+        time_label = "yesterday"
+    else:
+        unit_label = unit[:-1] if amount == 1 else unit
+        time_label = f"last {amount} {unit}"
+    
     summary = (f"Activity summary for {time_label}: \n{fall_count} falls, \n{presence_count} presence changes, \n{radar_failure_count} radar failures.")
-
+    
     print(f"[summary] {summary}")
     return {"summary": summary}
 
