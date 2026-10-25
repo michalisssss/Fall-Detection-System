@@ -11,8 +11,8 @@ static PubSubClient mqttClient(espClient);
 // Track the last connection attempt to avoid blocking the loop
 static unsigned long lastMQTTAttempt = 0;
 
-// Initialize MQTT connection to the broker - Blocks until connected OR timeout (MQTT_CONNECT_TIMEOUT_MS)
-void connectMQTT(bool singleAttempt) {
+// Initialize MQTT connection to the broker - Blocks until connected OR timeout
+void connectMQTT(bool nonBlocking) {
     unsigned long start = millis();
 
     mqttClient.setServer(MQTT_BROKER, MQTT_PORT);
@@ -39,18 +39,18 @@ void connectMQTT(bool singleAttempt) {
         } else {
             Serial.print("failed, rc=");
             Serial.println(mqttClient.state());
-            if (singleAttempt) return;   // do not block the main loop
+            if (nonBlocking) return;   // do not block the main loop
             delay(2000);
         }
     }
 }
 
-// Ensure MQTT connection is maintained - retries every MQTT_RETRY_INTERVAL_MS to avoid blocking the loop
+// Ensure MQTT connection is maintained - retries every MQTT_RETRY_INTERVAL_MS
 void ensureMQTTConnected() {
     if (!mqttClient.connected()) {
         if (millis() - lastMQTTAttempt > MQTT_RETRY_INTERVAL_MS) {
             Serial.println("MQTT lost, reconnecting...");
-            connectMQTT(true);
+            connectMQTT(true); // Non-blocking
             lastMQTTAttempt = millis();
         }
     }
@@ -70,19 +70,19 @@ bool isMQTTConnected() {
 static bool publish(const char* topic, JsonDocument& doc, const char* label) {
     // Serialize
     char buffer[256];
-    size_t n = serializeJson(doc, buffer);
+    size_t n = serializeJson(doc, buffer); // size_t -> byte size
 
-    // Check for truncation
+    // Check if JSON fits the buffer
     if (n >= sizeof(buffer)) {
-        Serial.print("WARNING: JSON truncated (");
+        Serial.print("WARNING: JSON overflow (");
         Serial.print(label);
         Serial.println(")");
         return false;
     }
 
-    // Try to publish up to 3 times
+    // Try to publish up to 3 times (arbitrary number)
     for (int attempt = 1; attempt <= 3; attempt++) {
-        if (mqttClient.publish(topic, (const uint8_t*)buffer, n)) {
+        if (mqttClient.publish(topic, (const uint8_t*)buffer, n)) { // (const uint8_t*) needed cast
             Serial.print("Published ");
             Serial.println(label);
             return true;
@@ -152,13 +152,14 @@ void publishHeartbeat() {
     publish(MQTT_TOPIC_HEARTBEAT, doc, "heartbeat");
 }
 
-// Publish a presence update periodically to indicate whether a person is in the room
+// Publish a presence update on change (human entered or left the room)
 void publishPresence(bool human) {
     if (!mqttClient.connected()) return;
     static bool lastPresence = false;
     static bool initialized = false;
 
-    if (initialized && human == lastPresence) return;  // no change -> skip 
+    // Skip if presence has not changed since the last successful publish
+    if (initialized && human == lastPresence) return; 
 
     JsonDocument doc;
     doc["event"] = "presence_changed";
@@ -167,6 +168,7 @@ void publishPresence(bool human) {
     doc["device_id"] = MQTT_CLIENT_ID;
     doc["timestamp"] = millis();
 
+     // Update the cached state if the message was sent
     if (publish(MQTT_TOPIC_EVENT, doc, "presence")) {
         lastPresence = human;
         initialized = true;

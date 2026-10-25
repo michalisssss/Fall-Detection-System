@@ -20,7 +20,7 @@ void setup() {
 
     // Connect to network
     connectWiFi();
-    connectMQTT();
+    connectMQTT(false); // Block until connected or timeout
 
     // Enable watchdog
     watchdogInit();
@@ -56,7 +56,7 @@ void loop() {
         lastHeartbeat = millis();
     }
 
-    // Periodic human presence update
+    // Ηuman presence update
     publishPresence(radarIsHumanPresent());
 
     // Feed watchdog so it doesnt reset the system

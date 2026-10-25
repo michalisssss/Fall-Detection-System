@@ -18,10 +18,10 @@ void buzzerInit() {
 }
 
 // Start a non-blocking beep
-void buzzerBeep(unsigned long duration_ms) {
+void buzzerBeep() {
     digitalWrite(BUZZER_PIN, HIGH);
     beepStartTime = millis();
-    beepDuration = duration_ms;
+    beepDuration = BUZZER_FALL_DURATION_MS;
     beeping = true;
 }
 

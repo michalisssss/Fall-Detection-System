@@ -12,10 +12,10 @@ MQTT_TOPIC_STATUS = "home/fall-detection/status"
 # Telegram bot configuration
 TELEGRAM_BOT_TOKEN = "" ###########################################################
 
-# Primary contact receives the first alert (child)
+# Primary contact receives the first alert 
 TELEGRAM_CHAT_PRIMARY = ""
 
-# Secondary contact receives escaletion alert (family group chat)
+# Secondary contact (group chat) receives escaletion alert
 TELEGRAM_CHAT_SECONDARY = ""
 
 # Escalation delay (15 seconds more than the ESP32 escalation timeout so there is no double escaltion)

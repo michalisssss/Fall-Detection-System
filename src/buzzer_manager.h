@@ -4,7 +4,7 @@
 #include <Arduino.h>
 
 void buzzerInit();
-void buzzerBeep(unsigned long duration_ms);
+void buzzerBeep();
 void buzzerOff();
 void buzzerUpdate();
 

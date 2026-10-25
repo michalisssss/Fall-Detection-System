@@ -22,7 +22,7 @@ void watchdogInit() {
     }
 
     // Register the current loopTask for the watchdog to monitor
-    if (esp_task_wdt_add(NULL) != ESP_OK) { // NULL -> task that calls the watchdog
+    if (esp_task_wdt_add(NULL) != ESP_OK) { // NULL refers to the task that calls the watchdog
         Serial.println("WARNING: Watchdog add failed");
         return;
     }
