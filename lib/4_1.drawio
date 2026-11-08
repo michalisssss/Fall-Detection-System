@@ -292,7 +292,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="p8WTEh8z8flovS_CXtGR" name="Page-4">
-    <mxGraphModel dx="1178" dy="631" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -398,10 +398,146 @@
     </mxGraphModel>
   </diagram>
   <diagram id="Fi4NIUu1UXJwX4s_oFGx" name="Page-5">
-    <mxGraphModel grid="1" page="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1178" dy="631" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-1" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-2" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Start&lt;div&gt;(Hub)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="80" x="22" y="180" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-3" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-28">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="308" y="195" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-37" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-4" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="MQTT Client and Telegram Bot Initialization" vertex="1">
+          <mxGeometry height="50" width="100" x="156" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-30" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-17" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Telegram Polling (getUpdates)" vertex="1">
+          <mxGeometry height="50" width="100" x="156" y="253" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-36" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-35">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-28" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Wait for MQTT Message" vertex="1">
+          <mxGeometry height="50" width="100" x="316" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-38" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-47" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-38" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="Yes" vertex="1">
+          <mxGeometry relative="1" x="-0.4542" y="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-46" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-17">
+          <mxGeometry relative="1" x="0.03" as="geometry">
+            <Array as="points">
+              <mxPoint x="366" y="323" />
+              <mxPoint x="206" y="323" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-48" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-46" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="No" vertex="1">
+          <mxGeometry relative="1" x="0.34" y="2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-29" parent="1" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="New Message?" vertex="1">
+          <mxGeometry height="50" width="60" x="336" y="253" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-39" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-32">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-31" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Filter Chat ID" vertex="1">
+          <mxGeometry height="50" width="100" x="476" y="253" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-44" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-41">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="446" y="371" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-49" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-44" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="No" vertex="1">
+          <mxGeometry relative="1" x="0.1395" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-45" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;exitX=1;exitY=0.5;exitDx=0;exitDy=0;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-50" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-45" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="Yes" vertex="1">
+          <mxGeometry relative="1" x="-0.5891" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-32" parent="1" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Valid Chat ID?" vertex="1">
+          <mxGeometry height="50" width="60" x="496" y="346" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-33" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Send Telegram Reply" vertex="1">
+          <mxGeometry height="50" width="100" x="695" y="407" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-43" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-33">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-34" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Call Needle (handle_telegram&lt;div&gt;_query)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="100" x="556" y="407" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-52" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-51">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-35" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Message Received" vertex="1">
+          <mxGeometry height="50" width="100" x="476" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-41" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Ignore Message" vertex="1">
+          <mxGeometry height="50" width="100" x="396" y="407" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-53" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-34">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-54" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-53" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="Fall&amp;nbsp;&lt;div&gt;Event&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.4653" y="-2" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-57" edge="1" parent="1" source="CzY5QELFmTYgtIkR9ANm-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="CzY5QELFmTYgtIkR9ANm-55">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-58" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-57" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="Heartbeat&lt;div&gt;Event&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.2887" as="geometry">
+            <mxPoint x="27" y="25" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-66" edge="1" parent="1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="645.9999999999998" y="170" as="sourcePoint" />
+            <mxPoint x="645.9999999999998" y="116" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-67" connectable="0" parent="CzY5QELFmTYgtIkR9ANm-66" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="Status&lt;div&gt;(LWT)&lt;/div&gt;" vertex="1">
+          <mxGeometry relative="1" x="-0.1914" y="-1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-51" parent="1" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Event Type?" vertex="1">
+          <mxGeometry height="50" width="60" x="616" y="170" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-55" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Update Timer" vertex="1">
+          <mxGeometry height="50" width="100" x="695" y="253" as="geometry" />
+        </mxCell>
+        <mxCell id="CzY5QELFmTYgtIkR9ANm-59" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Send Offline Alert" vertex="1">
+          <mxGeometry height="50" width="100" x="596" y="66" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
