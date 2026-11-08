@@ -1,6 +1,6 @@
-<mxfile host="app.diagrams.net">
+<mxfile host="app.diagrams.net" pages="2">
   <diagram name="Page-1" id="pSkz1_JOA1wkNzNvuab_">
-    <mxGraphModel dx="982" dy="526" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -93,6 +93,38 @@
         </mxCell>
         <mxCell id="T8Pcg_o4TbloOGLH39_C-22" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelPerimeter=1;fillColor=#eeeeee;strokeColor=#36393d;fontSize=11;" value="Caregiver" vertex="1">
           <mxGeometry height="60" width="30" x="778" y="560" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="hhnkECWMqjc2qlMZXccf" name="Page-2">
+    <mxGraphModel dx="982" dy="526" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="0W6vqXymiPat81x9ACs7-29" edge="1" parent="1" source="0W6vqXymiPat81x9ACs7-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="0W6vqXymiPat81x9ACs7-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-1" parent="1" style="ellipse;shape=doubleEllipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="88" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-2" parent="1" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;strokeWidth=5;perimeter=ellipsePerimeter;" value="" vertex="1">
+          <mxGeometry height="60" width="60" x="781" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-31" edge="1" parent="1" source="0W6vqXymiPat81x9ACs7-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="0W6vqXymiPat81x9ACs7-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-3" parent="1" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" value="STATE IDLE" vertex="1">
+          <mxGeometry height="60" width="60" x="242" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-4" parent="1" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" value="STATE&lt;div&gt;PENDING&lt;br&gt;&lt;div&gt;FALL&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="572" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-5" parent="1" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" value="STATE&lt;div&gt;PENDING&lt;/div&gt;&lt;div&gt;RECOVERY&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="395" y="231" as="geometry" />
+        </mxCell>
+        <mxCell id="0W6vqXymiPat81x9ACs7-7" parent="1" style="shape=ellipse;html=1;dashed=0;whiteSpace=wrap;aspect=fixed;perimeter=ellipsePerimeter;" value="STATE&lt;div&gt;FALL&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="60" x="759" y="374" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
