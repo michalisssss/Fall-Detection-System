@@ -9,7 +9,7 @@
         </mxCell>
         <mxCell id="T8Pcg_o4TbloOGLH39_C-9" connectable="0" parent="T8Pcg_o4TbloOGLH39_C-8" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="UART&lt;div&gt;Data&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2911" y="-1" as="geometry">
-            <mxPoint x="3" y="-1" as="offset" />
+            <mxPoint x="3" y="-20" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="T8Pcg_o4TbloOGLH39_C-1" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;fontSize=11;" value="Radar MR60FDA&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;2&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;(60 GHz)&lt;/span&gt;&lt;/div&gt;" vertex="1">
@@ -28,7 +28,7 @@
         </mxCell>
         <mxCell id="T8Pcg_o4TbloOGLH39_C-16" connectable="0" parent="T8Pcg_o4TbloOGLH39_C-15" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="MQTT&lt;div&gt;(WiFi)&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2519" y="-2" as="geometry">
-            <mxPoint x="3" y="-2" as="offset" />
+            <mxPoint x="3" y="-21" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="T8Pcg_o4TbloOGLH39_C-4" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;fontSize=11;" value="&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;ESP32-C6&lt;/span&gt;" vertex="1">
@@ -40,9 +40,9 @@
         <mxCell id="T8Pcg_o4TbloOGLH39_C-19" edge="1" parent="1" source="T8Pcg_o4TbloOGLH39_C-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;fontSize=11;" target="T8Pcg_o4TbloOGLH39_C-18" value="">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="T8Pcg_o4TbloOGLH39_C-33" connectable="0" parent="T8Pcg_o4TbloOGLH39_C-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="Data" vertex="1">
+        <mxCell id="T8Pcg_o4TbloOGLH39_C-33" connectable="0" parent="T8Pcg_o4TbloOGLH39_C-19" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="MQTT&lt;div&gt;Event&lt;/div&gt;" vertex="1">
           <mxGeometry relative="1" x="-0.2833" y="-2" as="geometry">
-            <mxPoint x="5" y="-2" as="offset" />
+            <mxPoint x="5" y="-21" as="offset" />
           </mxGeometry>
         </mxCell>
         <mxCell id="T8Pcg_o4TbloOGLH39_C-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;fontSize=11;" value="&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff)); text-decoration-line: inherit;&quot;&gt;Mosquitto Broker&lt;/span&gt;&lt;div&gt;(Hub: Raspberry Pi)&lt;/div&gt;" vertex="1">
