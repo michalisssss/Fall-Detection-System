@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" pages="3">
+<mxfile host="app.diagrams.net" pages="5">
   <diagram name="Page-1" id="pSkz1_JOA1wkNzNvuab_">
     <mxGraphModel grid="1" page="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
@@ -194,7 +194,7 @@
     </mxGraphModel>
   </diagram>
   <diagram id="rZM62ThZwXZDnSQBjcNA" name="Page-3">
-    <mxGraphModel dx="1178" dy="631" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel grid="1" page="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -288,6 +288,81 @@
             </Array>
           </mxGeometry>
         </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="p8WTEh8z8flovS_CXtGR" name="Page-4">
+    <mxGraphModel dx="1178" dy="631" grid="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="0VhzNiH1F0HfImci1TC0-12" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-1" parent="1" style="html=1;dashed=0;whiteSpace=wrap;shape=mxgraph.dfd.start;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Start&lt;div&gt;(setup)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="30" width="80" x="9" y="165" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-8" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-2" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Hardware Initialization&lt;div&gt;(Radar, WiFi, MQTT, Watchdog)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="50" width="100" x="143" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-10" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-3" parent="1" style="whiteSpace=wrap;html=1;dashed=0;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Main Loop&lt;div&gt;(loop)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="120" x="295" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-14" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-13">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-9" parent="1" style="whiteSpace=wrap;html=1;dashed=0;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Read Radar Data (radarUpdate)" vertex="1">
+          <mxGeometry height="60" width="120" x="463" y="150" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-16" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-15">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-22" connectable="0" parent="0VhzNiH1F0HfImci1TC0-16" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=fontFamily,fontColor,fontStyle,textOpacity,labelBorderColor,labelBorderWidth,labelBackgroundColor,defaultLabelBackgroundColor,labelPadding;defaultLabelBackgroundColor=page;fontSize=11;" value="No" vertex="1">
+          <mxGeometry relative="1" x="-0.1884" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-18" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-13" parent="1" style="shape=rhombus;html=1;dashed=0;whiteSpace=wrap;perimeter=rhombusPerimeter;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Valid Frame?" vertex="1">
+          <mxGeometry height="50" width="60" x="631" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-15" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Check Radar Timeout" vertex="1">
+          <mxGeometry height="50" width="100" x="737" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-21" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-17" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Update State Machine" vertex="1">
+          <mxGeometry height="50" width="100" x="611" y="253" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-24" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-23">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-19" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Ensure WiFi/MQTT Connection" vertex="1">
+          <mxGeometry height="50" width="100" x="611" y="351" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-25" edge="1" parent="1" source="0VhzNiH1F0HfImci1TC0-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" target="0VhzNiH1F0HfImci1TC0-3">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="0VhzNiH1F0HfImci1TC0-23" parent="1" style="html=1;dashed=0;whiteSpace=wrap;fontSize=11;fillColor=#eeeeee;strokeColor=#36393d;" value="Feed Hardware Watchdog" vertex="1">
+          <mxGeometry height="50" width="100" x="305" y="351" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="Fi4NIUu1UXJwX4s_oFGx" name="Page-5">
+    <mxGraphModel grid="1" page="1" gridSize="11" guides="1" tooltips="1" connect="1" arrows="1" fold="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
       </root>
     </mxGraphModel>
   </diagram>
