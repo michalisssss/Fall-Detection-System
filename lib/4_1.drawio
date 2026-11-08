@@ -4,7 +4,7 @@
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-42" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-2">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-42" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-2">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="M5BmsXX7hZO89Ogs-IEY-44" connectable="0" parent="M5BmsXX7hZO89Ogs-IEY-42" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;defaultLabelBackgroundColor=page;" value="UART&lt;div&gt;Data&lt;/div&gt;" vertex="1">
@@ -12,10 +12,10 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-1" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;" value="Ραντάρ MR60FDA&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;2&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;(60 GHz)&lt;/span&gt;&lt;/div&gt;" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-1" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;fillColor=#eeeeee;strokeColor=#36393d;" value="Ραντάρ MR60FDA&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;2&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;(60 GHz)&lt;/span&gt;&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="65" y="435" as="geometry" />
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-48" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-3">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-48" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-3">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="M5BmsXX7hZO89Ogs-IEY-49" connectable="0" parent="M5BmsXX7hZO89Ogs-IEY-48" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;defaultLabelBackgroundColor=page;" value="Local&lt;div&gt;Check&lt;/div&gt;" vertex="1">
@@ -23,7 +23,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-58" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;flowAnimation=1;" target="M5BmsXX7hZO89Ogs-IEY-4">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-58" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;flowAnimation=1;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-4">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="M5BmsXX7hZO89Ogs-IEY-59" connectable="0" parent="M5BmsXX7hZO89Ogs-IEY-58" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;defaultLabelBackgroundColor=page;" value="MQTT&lt;div&gt;(WiFi)&lt;/div&gt;" vertex="1">
@@ -31,19 +31,19 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-2" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;" value="&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;ESP32-C6&lt;/span&gt;" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-2" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;fillColor=#eeeeee;strokeColor=#36393d;" value="&lt;span style=&quot;text-decoration-line: inherit; background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;ESP32-C6&lt;/span&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="235" y="435" as="geometry" />
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-3" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;" value="Buzzer &amp;amp; LED" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-3" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;fillColor=#eeeeee;strokeColor=#36393d;" value="Buzzer &amp;amp; LED" vertex="1">
           <mxGeometry height="60" width="120" x="235" y="565" as="geometry" />
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-60" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-7">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-60" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-7">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-4" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;" value="&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff)); text-decoration-line: inherit;&quot;&gt;Mosquitto Broker&lt;/span&gt;&lt;div&gt;(Hub / Raspberry Pi)&lt;/div&gt;" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-4" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;fillColor=#eeeeee;strokeColor=#36393d;" value="&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff)); text-decoration-line: inherit;&quot;&gt;Mosquitto Broker&lt;/span&gt;&lt;div&gt;(Hub / Raspberry Pi)&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="405" y="435" as="geometry" />
         </mxCell>
-        <mxCell id="av4cbYDEbWI0GuvhtBGi-8" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-8">
+        <mxCell id="av4cbYDEbWI0GuvhtBGi-8" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-8">
           <mxGeometry relative="1" x="-0.131" as="geometry">
             <Array as="points">
               <mxPoint x="770" y="665" />
@@ -56,10 +56,10 @@
             <mxPoint x="23" y="-1" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-6" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelPerimeter=1;" value="Caregiver" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-6" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;labelPerimeter=1;fillColor=#eeeeee;strokeColor=#36393d;" value="Caregiver" vertex="1">
           <mxGeometry height="60" width="30" x="755" y="565" as="geometry" />
         </mxCell>
-        <mxCell id="av4cbYDEbWI0GuvhtBGi-3" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-8">
+        <mxCell id="av4cbYDEbWI0GuvhtBGi-3" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-8">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="av4cbYDEbWI0GuvhtBGi-11" connectable="0" parent="av4cbYDEbWI0GuvhtBGi-3" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;defaultLabelBackgroundColor=page;" value="HTTP&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(#000000, var(--ge-light-color, #ffffff));&quot;&gt;POST&lt;/span&gt;" vertex="1">
@@ -67,10 +67,10 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-7" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;" value="Needle (SLM)" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-7" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;fillColor=#eeeeee;strokeColor=#36393d;" value="Needle (SLM)" vertex="1">
           <mxGeometry height="60" width="120" x="575" y="435" as="geometry" />
         </mxCell>
-        <mxCell id="av4cbYDEbWI0GuvhtBGi-6" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-6">
+        <mxCell id="av4cbYDEbWI0GuvhtBGi-6" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-6">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="av4cbYDEbWI0GuvhtBGi-10" connectable="0" parent="av4cbYDEbWI0GuvhtBGi-6" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];inheritText=1;defaultLabelBackgroundColor=page;" value="Message" vertex="1">
@@ -78,7 +78,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="av4cbYDEbWI0GuvhtBGi-13" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;" target="M5BmsXX7hZO89Ogs-IEY-7">
+        <mxCell id="av4cbYDEbWI0GuvhtBGi-13" edge="1" parent="1" source="M5BmsXX7hZO89Ogs-IEY-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;defaultLabelBackgroundColor=page;fillColor=#eeeeee;strokeColor=#36393d;" target="M5BmsXX7hZO89Ogs-IEY-7">
           <mxGeometry relative="1" x="-0.1139" as="geometry">
             <Array as="points">
               <mxPoint x="545" y="595" />
@@ -91,7 +91,7 @@
             <mxPoint as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="M5BmsXX7hZO89Ogs-IEY-8" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;" value="Telegram Bot API" vertex="1">
+        <mxCell id="M5BmsXX7hZO89Ogs-IEY-8" parent="1" style="shape=parallelogram;perimeter=parallelogramPerimeter;whiteSpace=wrap;html=1;shapeInside=1;fixedSize=1;fillColor=#eeeeee;strokeColor=#36393d;" value="Telegram Bot API" vertex="1">
           <mxGeometry height="60" width="120" x="575" y="565" as="geometry" />
         </mxCell>
       </root>
