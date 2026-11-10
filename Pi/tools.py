@@ -137,8 +137,19 @@ def escalate_alert(previous_contact: str, elapsed_minutes: int):
     return {"status": "escalated", "previous_contact": previous_contact}
 
 
-@needle.tool
-def summarize_activity(amount: int, unit: str, anchor: str = "now"):
+@needle.tool(triggers=[
+    r"\bsummary\b",
+    r"\bactivity\b",
+    r"\bwhat happened\b",
+    r"\blast\b",
+    r"\btoday\b",
+    r"\byesterday\b",
+    r"\bweek\b",
+    r"\bmonth\b",
+    r"\bhour\b",
+    r"\bday\b"
+])
+def summarize_activity(amount: int, unit: str):
     """Generate a summary of activity for a specific time period.
 
     Use this when the caregiver asks what happened recently.

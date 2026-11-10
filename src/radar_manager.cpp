@@ -38,6 +38,8 @@ static bool lastHuman = false;         // last known human presence
 
 // Initialization
 void radarInit() {
+    mmWave.setInstallationHeight(RADAR_HEIGHT_M);
+    
     // Open namespace fall
     if (!prefs.begin("fall", false)) { // false -> not read-only (read and write allowed)
         Serial.println("WARNING: NVS init failed, using defaults");

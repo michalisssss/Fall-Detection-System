@@ -4,7 +4,8 @@ import time
 import requests
 import paho.mqtt.client as mqtt
 from datetime import datetime
-from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, TELEGRAM_BOT_TOKEN, MQTT_TOPIC_HEARTBEAT, MQTT_TOPIC_STATUS, HEARTBEAT_TIMEOUT_SEC)
+from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, TELEGRAM_BOT_TOKEN, HEARTBEAT_TIMEOUT_SEC, EXPECTED_ROOMS)
+
 
 # Create and configure the MQTT client
 def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_escalation_callback = None, on_recovery_callback = None,on_presence_callback = None, on_heartbeat_callback = None, on_status_callback = None):
@@ -37,13 +38,22 @@ def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_es
             # Override the timestamp with the Pi's local time
             payload["timestamp"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
+            # Extract room from topic: home/fall-detection/{room}/{topic_type}
+            topic_parts = msg.topic.split('/')
+            room = topic_parts[2] if len(topic_parts) >= 3 else "unknown"
+            topic_type = topic_parts[3] if len(topic_parts) >= 4 else "unknown"
+            
+            # Add room to payload if not already present
+            if "room" not in payload:
+                payload["room"] = room
+
             print(f"Received on {msg.topic}: {payload}")
             event = payload.get("event")
 
-            if msg.topic == MQTT_TOPIC_HEARTBEAT: # Heartbeat from ESP32
+            if topic_type == "heartbeat": # Heartbeat from ESP32
                 if on_heartbeat_callback: on_heartbeat_callback(payload)
                 return
-            if msg.topic == MQTT_TOPIC_STATUS: # Last Will status (offline - ESP32 disconnected unexpectedly)
+            if topic_type == "status": # Last Will status (offline - ESP32 disconnected unexpectedly)
                 if on_status_callback: on_status_callback(payload)
                 return
 
@@ -129,27 +139,42 @@ def start_telegram_polling(on_query_callback):
     print("[telegram] Polling started")
 
 def start_heartbeat_monitor(on_timeout_callback, on_recovery_callback = None, timeout_sec = HEARTBEAT_TIMEOUT_SEC):
-    # lists
-    last_heartbeat = [time.time()]
-    node_down = [False]   # True = node dead
+    # Dictionary to track the last heartbeat time per room ("living_room": timestamp, "bathroom": timestamp, ...)
+    last_heartbeat = {}   
+    # Dictionary to track which rooms are currently down ("living_room": False, "bathroom": True, ...)
+    node_down = {} 
+
+    # Initialize all expected rooms with current time (so they don't trigger immediately)
+    for room in EXPECTED_ROOMS:
+        last_heartbeat[room] = time.time()
+        node_down[room] = False
 
     def on_heartbeat(payload):
-        # heartbeat arrived - refresh timestamp
-        last_heartbeat[0] = time.time()
+        # Extract the room from the payload
+        room = payload.get("room", "unknown")
 
-        # If the node was marked as down, it is now back online
-        if node_down[0]: # True = node dead
-            node_down[0] = False # False = node alive
-            if on_recovery_callback: on_recovery_callback()
+        # Refresh the timestamp for this specific room
+        last_heartbeat[room] = time.time()
+    
+        # If this room was marked as down, it is now back online
+        if node_down.get(room, False):
+            node_down[room] = False
+            print(f"[heartbeat] {room} is back online")
+            if on_recovery_callback:
+                on_recovery_callback(room)  # Pass the room to the callback
 
     def monitor_loop():
         while True:
-            time.sleep(10) # Check every 10 seconds
-            # If node is not marked as down and there's no heartbeat within the timeout -> alert
-            if (not node_down[0]) and (time.time() - last_heartbeat[0] > timeout_sec):
-                node_down[0] = True # alert once per outage
-                print(f"[heartbeat] No heartbeat for {timeout_sec}s")
-                on_timeout_callback()
+            time.sleep(10)  # Check every 10 seconds
+            now = time.time()
+            
+            # Iterate over all rooms that have sent at least one heartbeat
+            for room, last_time in last_heartbeat.items():
+                # If the room is not marked as down and the timeout has passed
+                if not node_down.get(room, False) and (now - last_time > timeout_sec):
+                    node_down[room] = True  # Mark as down (alert once per outage)
+                    print(f"[heartbeat] No heartbeat from {room} for {timeout_sec}s")
+                    on_timeout_callback(room)  # Pass the room to the callback
 
     # Monitor runs in a daemon thread so it stops with the main program
     threading.Thread(target = monitor_loop, daemon = True).start()

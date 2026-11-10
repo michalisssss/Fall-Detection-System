@@ -243,11 +243,11 @@ def main():
     print(f"Starting fall detection agent... Connecting to MQTT broker at {MQTT_BROKER}:{MQTT_PORT}")
 
     # Heartbeat monitor
-    def on_heartbeat_timeout():
-        send_telegram_message("Warning: the fall detection node is not responding. Falls may not be detected.")
+    def on_heartbeat_timeout(room):
+        send_telegram_message(f"Warning: the fall detection node in the {room} is not responding. Falls may not be detected.")
 
-    def on_node_recovered():
-        send_telegram_message("The fall detection node is back online.")
+    def on_node_recovered(room):
+        send_telegram_message(f"The fall detection node in the {room} is back online.")
 
     def on_status(payload):   # Last Will message from the broker
         if payload.get("status") == "offline":

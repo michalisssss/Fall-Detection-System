@@ -5,9 +5,11 @@ MQTT_BROKER = "localhost"
 MQTT_PORT = 1883
 MQTT_TOPIC = "home/fall-detection/#"
 
-HEARTBEAT_TIMEOUT_SEC = 120  # 2 minutes without heartbeat = node down
-MQTT_TOPIC_HEARTBEAT = "home/fall-detection/heartbeat"
-MQTT_TOPIC_STATUS = "home/fall-detection/status"
+# Must match ROOM_NAME in ESP32's config.h (case-sensitive)
+EXPECTED_ROOMS = ["bathroom", "kitchen", "living_room", "bedroom"]
+
+# 2 minutes without heartbeat = node down
+HEARTBEAT_TIMEOUT_SEC = 120  
 
 # Contact names
 PRIMARY_CONTACT_NAME = "child"

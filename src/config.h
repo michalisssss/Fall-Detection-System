@@ -1,6 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
+// Radar configuration
+#define RADAR_HEIGHT_M 2.7
+
 // LED configuration
 #define LED_PIN 15
 #define LED_BLINK_INTERVAL_MS 500 // 0.5 seconds ON - 0.5 seconds OFF
@@ -17,18 +20,18 @@
 #define WIFI_CONNECT_TIMEOUT_MS 30000 // 30 seconds for initial connection
 #define WIFI_RETRY_INTERVAL_MS 60000  // Retry connecting every 60 seconds
 
-// MQTT configuration
-#define MQTT_PORT 1883
-#define MQTT_BROKER "X.X.X.X" // Raspberry PI IP #####################################################################
-#define MQTT_CLIENT_ID "xiao-fall-detector"
-#define MQTT_TOPIC_EVENT "home/fall-detection/events"
-#define MQTT_TOPIC_HEARTBEAT "home/fall-detection/heartbeat"
-#define MQTT_TOPIC_STATUS  "home/fall-detection/status"
-#define MQTT_CONNECT_TIMEOUT_MS 10000 // 10 seconds for connection
-#define MQTT_RETRY_INTERVAL_MS 15000  // Retry connecting every 15 seconds
-
 // Room name included in event payloads
 #define ROOM_NAME "living_room"
+
+// MQTT configuration
+#define MQTT_CLIENT_ID "xiao-" ROOM_NAME // Unique client ID per device (1 device per room)
+#define MQTT_PORT 1883
+#define MQTT_BROKER "X.X.X.X" // Raspberry PI IP #####################################################################
+#define MQTT_TOPIC_EVENT "home/fall-detection/" ROOM_NAME "/events"
+#define MQTT_TOPIC_HEARTBEAT "home/fall-detection/" ROOM_NAME "/heartbeat"
+#define MQTT_TOPIC_STATUS "home/fall-detection/" ROOM_NAME "/status"
+#define MQTT_CONNECT_TIMEOUT_MS 10000 // 10 seconds for connection
+#define MQTT_RETRY_INTERVAL_MS 15000  // Retry connecting every 15 seconds
 
 // Timing intervals (in milliseconds)
 #define HEARTBEAT_INTERVAL 30000 // 30 seconds between heartbeats

@@ -58,6 +58,7 @@ def test(label, query, expected):
 # (label, query, expected_tool) pairs for routing tests
 tests = [
     ("fall detected", "A fall was detected in the living_room. Alert the caregiver.", "alert_caregiver"),
+    ("fall in bathroom", "A fall was detected in the bathroom. Alert the caregiver.", "alert_caregiver"),
     ("fall with person", "A fall was detected in the living_room. A person is present. Alert the caregiver.", "alert_caregiver"),
     ("escalation no response", "The child did not respond after 3 minutes. Escalate the alert with the child as previous contact.", "escalate_alert"),
     ("summary last hour", "Give me an activity summary for the last hour.", "summarize_activity"),
