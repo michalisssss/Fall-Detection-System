@@ -45,8 +45,8 @@ def test(label, query, expected):
     called = extract_called_tool(result)
 
     # Fallback - if Needle did not call anything but expected is summarize_activity then its a PASS
-    if called is None and expected == "summarize_activity":
-        called = expected
+    #if called is None and expected == "summarize_activity":
+    #    called = expected
             
     if called == expected:
         print(f"[PASS] {label}: called={called} expected={expected}")

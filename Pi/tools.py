@@ -137,39 +137,23 @@ def escalate_alert(previous_contact: str, elapsed_minutes: int):
     return {"status": "escalated", "previous_contact": previous_contact}
 
 
-@needle.tool(triggers=[
-    r"\bsummary\b",
-    r"\bactivity\b",
-    r"\bwhat happened\b",
-    r"\blast\b",
-    r"\btoday\b",
-    r"\byesterday\b",
-    r"\bweek\b",
-    r"\bmonth\b",
-    r"\bhour\b",
-    r"\bday\b"
-])
+@needle.tool(triggers=["summary", "activity", "today", "yesterday", "last"])
 def summarize_activity(amount: int, unit: str):
-    """Generate a summary of activity for a specific time period.
+    """Summarize the person's activity for a given time period.
 
-    Use this when the caregiver asks what happened recently.
-    Do NOT use this for real-time alerts or fall notifications (use alert_caregiver for those).
-
-    Extract the number and the unit from the user's request.
-    Examples:
-        "last hour"     -> amount=1, unit="hours"
-        "last N hours"  -> amount=N, unit="hours"
-        "last week"     -> amount=1, unit="weeks"
-        "last N weeks"  -> amount=N, unit="weeks"
-        "last month"    -> amount=1, unit="months"
-        "last N months" -> amount=N, unit="months"
-        "today"         -> amount=1, unit="days"
-        "yesterday"     -> amount=1, unit="days"
+    Use this tool whenever the caregiver asks what happened recently.
+    If the user does not specify a number, use amount=1 by default.
+    Common mappings:
+    - "today" or "yesterday" -> amount=1, unit="days"
+    - "last hour" -> amount=1, unit="hours"
+    - "last week" -> amount=1, unit="weeks"
+    - "last month" -> amount=1, unit="months"
 
     Args:
-        amount: The number of time units to look back (e.g., 1, 2, 3, 7).
-        unit: The time unit. Must be one of: "hours", "days", "weeks", "months".
+        amount: The number of time units to look back.
+        unit: The time unit: "hours", "days", "weeks", or "months".
     """
+
     # Calculate the cutoff time dynamically based on the input
     now = datetime.now()
     if unit == "hours":
