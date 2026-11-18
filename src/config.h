@@ -35,7 +35,6 @@
 
 // Timing intervals (in milliseconds)
 #define HEARTBEAT_INTERVAL 30000 // 30 seconds between heartbeats
-#define PRESENCE_INTERVAL 60000  // 60 seconds between presence updates
 #define FALL_CONFIRM_MS 3000     // 3 seconds to confirm fall
 #define FALL_CLEAR_MS 2000       // 2 seconds to confirm recovery
 #define FALL_ESCALATE_MS 180000  // 3 minutes without recovery -> escalate
