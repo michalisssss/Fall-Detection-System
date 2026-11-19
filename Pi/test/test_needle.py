@@ -40,8 +40,8 @@ def extract_called_tool(result):
 
 # Routing test (Not confidence test)
 def test(label, query, expected):
-    agent = make_agent()
-    result = agent.run(query)
+    event_agent = make_agent()
+    result = event_agent.run(query)
     called = extract_called_tool(result)
 
     # Fallback - if Needle did not call anything but expected is summarize_activity then its a PASS

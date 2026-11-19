@@ -9,7 +9,7 @@
 #define LED_BLINK_INTERVAL_MS 500 // 0.5 seconds ON - 0.5 seconds OFF
 
 // Buzzer configuration
-#define BUZZER_PIN 2 // D2
+#define BUZZER_PIN 0 // GPIO 0 (Grove port)
 #define BUZZER_STOP_BTN 9       // XIAO ESP32-C6 boot button
 #define BUZZER_FALL_DURATION_MS 5000   // 5 seconds beep on fall
 #define BUZZER_REPEAT_MS 30000  // 30 seconds between repeated beeps

@@ -2,7 +2,7 @@ import threading
 from tools import (alert_caregiver, escalate_alert, summarize_activity, log_event, send_telegram_message)
 from mqtt_listener import create_mqtt_client, start_telegram_polling, start_heartbeat_monitor
 from config import (MQTT_BROKER, MQTT_PORT, ESCALATION_DELAY_SEC, TELEGRAM_CHAT_PRIMARY, TELEGRAM_CHAT_SECONDARY, PRIMARY_CONTACT_NAME, SECONDARY_CONTACT_NAME)
-from agents import agent, query_agent, build_fall_query, build_activity_prompt
+from agents import event_agent, query_agent, build_fall_query, build_activity_prompt
 
 # Allowed chat IDs for user queries (caregivers)
 ALLOWED_CHAT_IDS = {int(TELEGRAM_CHAT_PRIMARY), int(TELEGRAM_CHAT_SECONDARY)}
@@ -98,7 +98,7 @@ def handle_fall_event(event):
             alert_caregiver(room = room)
             return
         try:
-            result = agent.run(query)
+            result = event_agent.run(query)
         finally:
             needle_lock.release()
         print(f"Needle decision: {result}")
