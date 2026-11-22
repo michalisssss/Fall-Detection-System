@@ -142,7 +142,7 @@ def handle_recovery_event(event):
 # Last known presence per room
 last_presence = {}
 
-# Logs room pressence
+# Logs room presence
 def handle_presence_event(event):
     # Room and whether people are present
     present = event.get("human", False)
