@@ -15,8 +15,8 @@
 #define BUZZER_REPEAT_MS 30000  // 30 seconds between repeated beeps
 
 // WiFi configuration
-#define WIFI_SSID "hotspots"          // hotspot/router SSID #####################################################################
-#define WIFI_PASSWORD "passwordss"    // hotspot/router pass #####################################################################
+#define WIFI_SSID "hotspots"          // hotspot/router SSID
+#define WIFI_PASSWORD "passwordss"    // hotspot/router pass 
 #define WIFI_CONNECT_TIMEOUT_MS 30000 // 30 seconds for initial connection
 #define WIFI_RETRY_INTERVAL_MS 60000  // Retry connecting every 60 seconds
 
@@ -26,7 +26,7 @@
 // MQTT configuration
 #define MQTT_CLIENT_ID "xiao-" ROOM_NAME // Unique client ID per device (1 device per room)
 #define MQTT_PORT 1883
-#define MQTT_BROKER "X.X.X.X" // Raspberry PI IP #####################################################################
+#define MQTT_BROKER "X.X.X.X" // Raspberry PI IP
 #define MQTT_TOPIC_EVENT "home/fall-detection/" ROOM_NAME "/events"
 #define MQTT_TOPIC_HEARTBEAT "home/fall-detection/" ROOM_NAME "/heartbeat"
 #define MQTT_TOPIC_STATUS "home/fall-detection/" ROOM_NAME "/status"

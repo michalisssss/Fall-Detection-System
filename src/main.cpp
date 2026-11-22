@@ -62,5 +62,5 @@ void loop() {
     // Feed watchdog so it doesnt reset the system
     watchdogFeed();
 
-    delay(100); // TODO: test if delay is needed (mmWave.update already has 100ms timeout)
+    delay(100);
 }

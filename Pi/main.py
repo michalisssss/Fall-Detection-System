@@ -249,9 +249,9 @@ def main():
     def on_node_recovered(room):
         send_telegram_message(f"The fall detection node in the {room} is back online.")
 
-    def on_status(payload):   # Last Will message from the broker
+    def on_status(room, payload):   # Last Will message from the broker
         if payload.get("status") == "offline":
-            send_telegram_message("Warning: the fall detection node disconnected unexpectedly.")
+            send_telegram_message(f"Warning: the fall detection node in the {room} disconnected unexpectedly.")
     
     # Start Telegram polling in a background daemon thread for user messages
     start_telegram_polling(handle_telegram_query)

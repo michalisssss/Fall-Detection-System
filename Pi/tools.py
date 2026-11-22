@@ -94,7 +94,7 @@ def alert_caregiver(room: str):
     # Current time
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    # Αlert message
+    # Alert message
     message = (f"FALL DETECTED \nRoom: {room} \nSeverity: {severity} \nTime: {timestamp}")
 
     # Send alert to the primary caregiver
