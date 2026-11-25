@@ -1,9 +1,12 @@
 import time
 import json
 import paho.mqtt.client as mqtt
+from config import MQTT_USER, MQTT_PASS
 
 # Connect to the MQTT broker
 client = mqtt.Client(callback_api_version=mqtt.CallbackAPIVersion.VERSION2, client_id="test-heartbeat")
+if MQTT_USER and MQTT_PASS:
+    client.username_pw_set(MQTT_USER, MQTT_PASS)
 client.connect("localhost", 1883)
 client.loop_start()
 

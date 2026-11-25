@@ -24,6 +24,8 @@
 #define ROOM_NAME "living_room"
 
 // MQTT configuration
+#define MQTT_USER "fall_node"
+#define MQTT_PASS "mqtt_password"
 #define MQTT_CLIENT_ID "xiao-" ROOM_NAME // Unique client ID per device (1 device per room)
 #define MQTT_PORT 1883
 #define MQTT_BROKER "X.X.X.X" // Raspberry PI IP

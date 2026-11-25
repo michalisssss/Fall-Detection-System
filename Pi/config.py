@@ -4,6 +4,8 @@ import os
 MQTT_BROKER = "localhost"
 MQTT_PORT = 1883
 MQTT_TOPIC = "home/fall-detection/#"
+MQTT_USER = "fall_hub"
+MQTT_PASS = "mqtt_password"
 
 # Must match ROOM_NAME in ESP32's config.h (case-sensitive)
 EXPECTED_ROOMS = ["bathroom", "kitchen", "living_room", "bedroom"]

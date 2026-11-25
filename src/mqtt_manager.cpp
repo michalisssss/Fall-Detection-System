@@ -27,8 +27,8 @@ void connectMQTT(bool nonBlocking) {
 
         Serial.print("Connecting to MQTT broker...");
         if (mqttClient.connect(MQTT_CLIENT_ID, 
-                                    nullptr, // username
-                                    nullptr, // pass
+                                    MQTT_USER, // username
+                                    MQTT_PASS, // password
                                     MQTT_TOPIC_STATUS, // topic to be published at
                                     1,  // QoS - it will be sent atleast 1 time
                                     true, // retain - message will be kept for new subscribers

@@ -1,0 +1,14 @@
+[Unit]
+Description=Fall Detection Hub Service
+After=network.target mosquitto.service
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/home/pi/FallDetectionSystem/Pi
+ExecStart=/home/pi/FallDetectionSystem/Pi/.venv/bin/python main.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -198,21 +198,24 @@ def summarize_activity(amount: int, unit: str):
 
 
 @needle.tool
-def log_event(room: str, event_type: str):
+def log_event(room: str, event_type: str, duration_sec: int = None):
     """Log a non-critical event for later review by a caregiver.
-
     Use this to record presence changes, system status, or diagnostic events.
     Do NOT use this for fall alerts or escalations.
 
     Args:
         room: The room where the event occurred (e.g., "living_room").
         event_type: Type of event. Must be one of: "presence", "radar_failure", "recovery".
+        duration_sec: Optional duration in seconds (e.g., time spent on floor before recovery).
     """
     # Get the current time
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     # Append the event to the log file
-    append_log({"event": event_type, "room": room, "time": timestamp})
+    record = {"event": event_type, "room": room, "time": timestamp}
+    if duration_sec is not None:
+        record["duration_sec"] = duration_sec
+    append_log(record)
 
     print(f"[{timestamp}] [LOG] {event_type} in {room}")
 

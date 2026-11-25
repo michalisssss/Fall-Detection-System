@@ -1,3 +1,4 @@
+import datetime
 import threading
 from tools import (alert_caregiver, escalate_alert, summarize_activity, log_event, send_telegram_message)
 from mqtt_listener import create_mqtt_client, start_telegram_polling, start_heartbeat_monitor
@@ -69,6 +70,8 @@ def was_alert_sent(result):
     else:
         return False
 
+# Needed to track long lie duration (time spent on the floor before recovery)
+fall_start_times = {}
 # Handle ESP32's fall event
 def handle_fall_event(event):
     # event data
@@ -77,6 +80,7 @@ def handle_fall_event(event):
     timestamp = event.get("timestamp", "unknown")
 
     # Starting escalation timer
+    fall_start_times[room or "unknown"] = datetime.now()
     fall_timer.start()
     
     # If the room the event took place is unknown - alert anyway
@@ -133,10 +137,20 @@ def handle_recovery_event(event):
     # Cancel escalation timer
     fall_timer.cancel()
 
-    # Inform of recovery
+    # Inform of recovery and log
+    start_time = fall_start_times.pop(room, None)
+    if start_time is not None: 
+        duration_sec = int((datetime.now() - start_time).total_seconds())
+        send_telegram_message(f"The person in the {room} appears to have recovered (time on floor: {duration_sec}s).")
+        log_event(room = room, event_type = "recovery", duration_sec = duration_sec)
+    else:
+        send_telegram_message(f"The person in the {room} appears to have recovered.")
+        log_event(room = room, event_type = "recovery")
+
+    
     send_telegram_message(f"The person in the {room} appears to have recovered.")
 
-    # Log the recovery
+    
     log_event(room = room, event_type = "recovery")
 
 # Last known presence per room
@@ -181,7 +195,7 @@ def handle_telegram_query(text, chat_id = None):
     
     # Handle bot commands (start with "/")
     if text.startswith("/"):
-        if text == "/help":
+        if text == "/help": # Provide help text
             help_text = (
                 "I can answer questions about the person's activity.\n\n"
                 "Try one of these:\n"
@@ -190,6 +204,9 @@ def handle_telegram_query(text, chat_id = None):
                 "- Give me a summary for last week\n\n"
                 "Or just type a question in English.")
             send_telegram_message(help_text, chat_id = chat_id)
+        elif text == "/ack": # Acknowledge the fall alert and cancel escalation
+            fall_timer.cancel()
+            send_telegram_message("Escalation cancelled. Caregiver acknowledged the alert.", chat_id = chat_id)
         return
 
     text = text.strip() # disregard whitespaces

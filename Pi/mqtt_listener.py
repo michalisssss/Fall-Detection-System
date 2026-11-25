@@ -4,13 +4,14 @@ import time
 import requests
 import paho.mqtt.client as mqtt
 from datetime import datetime
-from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, TELEGRAM_BOT_TOKEN, HEARTBEAT_TIMEOUT_SEC, EXPECTED_ROOMS)
-
+from config import (MQTT_BROKER, MQTT_PORT, MQTT_TOPIC, MQTT_USER, MQTT_PASS, TELEGRAM_BOT_TOKEN, HEARTBEAT_TIMEOUT_SEC, EXPECTED_ROOMS)
 
 # Create and configure the MQTT client
 def create_mqtt_client(on_fall_callback, on_radar_failure_callback = None, on_escalation_callback = None, on_recovery_callback = None,on_presence_callback = None, on_heartbeat_callback = None, on_status_callback = None):
     # Create the MQTT client with a unique ID
     client = mqtt.Client(callback_api_version = mqtt.CallbackAPIVersion.VERSION2, client_id = "pi-fall-detection")
+    if MQTT_USER and MQTT_PASS: client.username_pw_set(MQTT_USER, MQTT_PASS)
+    
     # Automatic reconnection with exponential backoff
     client.reconnect_delay_set(min_delay = 1, max_delay = 30)
 

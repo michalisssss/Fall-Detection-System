@@ -16,6 +16,9 @@ handle_telegram_query("What happened today?", chat_id = 999999999)
 print("\n[unknown chat /help] should be ignored")
 handle_telegram_query("/help", chat_id = 999999999)
 
+print("\n[known chat /ack] should cancel escalation timer")
+handle_telegram_query("/ack", chat_id = int(TELEGRAM_CHAT_PRIMARY))
+
 # None chat_id -> should be silently ignored
 print("\n[None chat] should be ignored")
 handle_telegram_query("What happened today?", chat_id = None)
