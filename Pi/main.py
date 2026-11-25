@@ -147,12 +147,6 @@ def handle_recovery_event(event):
         send_telegram_message(f"The person in the {room} appears to have recovered.")
         log_event(room = room, event_type = "recovery")
 
-    
-    send_telegram_message(f"The person in the {room} appears to have recovered.")
-
-    
-    log_event(room = room, event_type = "recovery")
-
 # Last known presence per room
 last_presence = {}
 
